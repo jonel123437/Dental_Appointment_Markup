@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Dental Appointment System</title>
+    <link rel="stylesheet" href="admin-dashboard.css">
+</head>
+<body>
+    <!-- Fixed Header -->
+    <header class="header">
+        <div class="header-container">
+            <div class="header-brand">
+                <div class="logo">🦷</div>
+                <div class="brand-text">
+                    <h1>Dental Clinic</h1>
+                    <p>Admin Dashboard</p>
+                </div>
+                <span class="admin-badge">Admin</span>
+            </div>
+
+            <nav class="header-nav">
+                <div class="user-menu">
+                    <div class="user-avatar" onclick="toggleDropdown()">AD</div>
+                    <div class="user-dropdown" id="userDropdown">
+                        <div class="dropdown-header">
+                            <h3>Admin User</h3>
+                            <p>PIC Administrator</p>
+                        </div>
+                        <button class="dropdown-item logout" onclick="logout()">
+                            <span>🚪</span> Logout
+                        </button>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Dashboard -->
+    <div class="dashboard-container">
+        <!-- Stats Cards -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-info">
+                    <h3>Today's Appointments</h3>
+                    <div class="stat-value">3</div>
+                    <div class="stat-subtext">All slots filled</div>
+                </div>
+                <div class="stat-icon blue">📅</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-info">
+                    <h3>Completed Today</h3>
+                    <div class="stat-value">2</div>
+                    <div class="stat-subtext">1 pending</div>
+                </div>
+                <div class="stat-icon green">✅</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-info">
+                    <h3>Pending Reviews</h3>
+                    <div class="stat-value">4</div>
+                    <div class="stat-subtext">No-show excuses</div>
+                </div>
+                <div class="stat-icon orange">⏳</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-info">
+                    <h3>Total This Week</h3>
+                    <div class="stat-value">12</div>
+                    <div class="stat-subtext">3 per day avg</div>
+                </div>
+                <div class="stat-icon red">📊</div>
+            </div>
+        </div>
+
+        <!-- Tabs Navigation -->
+        <div class="tabs-nav">
+            <button class="tab-btn active" onclick="switchTab('schedule')">
+                <span>📅</span> Daily Schedule
+            </button>
+            <button class="tab-btn" onclick="switchTab('reviews')">
+                <span>⏳</span> No-Show Reviews
+                <span class="badge">4</span>
+            </button>
+            <button class="tab-btn" onclick="switchTab('history')">
+                <span>📜</span> Appointment History
+            </button>
+            <button class="tab-btn" onclick="switchTab('students')">
+                <span>👥</span> Student Management
+            </button>
+        </div>
+
+        <!-- Tab: Daily Schedule -->
+        <div class="tab-content active" id="scheduleTab">
+            <div class="section-card">
+                <div class="section-header">
+                    <h3 class="section-title">
+                        <span>📅</span> Today's Schedule - February 7, 2026
+                    </h3>
+                    <div class="section-actions">
+                        <button class="btn btn-secondary" onclick="exportSchedule()">
+                            <span>📥</span> Export to Excel
+                        </button>
+                    </div>
+                </div>
+
+                <div class="date-picker">
+                    <span style="color: #4a5568; font-weight: 600;">📆 Select Date:</span>
+                    <input type="date" value="2026-02-07" onchange="loadSchedule(this.value)">
+                </div>
+
+                <table class="appointment-table">
+                    <thead>
+                        <tr>
+                            <th>Student</th>
+                            <th>Purpose</th>
+                            <th>Appointment ID</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="student-info">
+                                    <div class="student-avatar">JD</div>
+                                    <div class="student-details">
+                                        <h4>Juan Dela Cruz</h4>
+                                        <p>STU-2024-001</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="purpose-tag cleaning">Cleaning</span>
+                            </td>
+                            <td>#APT-20260207-001</td>
+                            <td>
+                                <span class="status-badge completed">✅ Completed</span>
+                            </td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="action-btn complete" title="Mark as Complete" disabled>✓</button>
+                                    <button class="action-btn noshow" title="Mark as No-Show" disabled>✗</button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="student-info">
+                                    <div class="student-avatar">MS</div>
+                                    <div class="student-details">
+                                        <h4>Maria Santos</h4>
+                                        <p>STU-2024-002</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="purpose-tag extraction">Tooth Extraction</span>
+                            </td>
+                            <td>#APT-20260207-002</td>
+                            <td>
+                                <span class="status-badge completed">✅ Completed</span>
+                            </td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="action-btn complete" title="Mark as Complete" disabled>✓</button>
+                                    <button class="action-btn noshow" title="Mark as No-Show" disabled>✗</button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="student-info">
+                                    <div class="student-avatar">PR</div>
+                                    <div class="student-details">
+                                        <h4>Pedro Reyes</h4>
+                                        <p>STU-2024-003</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="purpose-tag pasta">Pasta</span>
+                            </td>
+                            <td>#APT-20260207-003</td>
+                            <td>
+                                <span class="status-badge confirmed">🕐 Pending</span>
+                            </td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="action-btn complete" title="Mark as Complete" onclick="markComplete('APT-20260207-003')">✓</button>
+                                    <button class="action-btn noshow" title="Mark as No-Show" onclick="markNoShow('APT-20260207-003')">✗</button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Tab: No-Show Reviews -->
+        <div class="tab-content" id="reviewsTab">
+            <div class="section-card">
+                <div class="section-header">
+                    <h3 class="section-title">
+                        <span>⏳</span> Pending No-Show Reviews (4)
+                    </h3>
+                </div>
+
+                <!-- Review Card 1 -->
+                <div class="review-card">
+                    <div class="review-header">
+                        <div class="review-student">
+                            <div class="review-student-avatar">AC</div>
+                            <div class="review-student-info">
+                                <h4>Anna Cruz</h4>
+                                <p>STU-2024-015 • juan.cruz@school.edu</p>
+                            </div>
+                        </div>
+                        <div class="review-date">
+                            <strong>Missed Date:</strong><br>
+                            February 5, 2026
+                        </div>
+                    </div>
+
+                    <div class="review-details">
+                        <div class="review-detail-row">
+                            <span class="review-label">Appointment ID</span>
+                            <span class="review-value">#APT-20260205-001</span>
+                        </div>
+                        <div class="review-detail-row">
+                            <span class="review-label">Purpose</span>
+                            <span class="review-value"><span class="purpose-tag cleaning">Cleaning</span></span>
+                        </div>
+                    </div>
+
+                    <div class="review-reason">
+                        <h5>📝 Reason Provided:</h5>
+                        <p><strong>Medical Emergency</strong><br>
+                        I had a sudden fever and was advised by my doctor to rest at home. I have a medical certificate if needed.</p>
+                    </div>
+
+                    <div class="review-history">
+                        <div class="history-stat">
+                            <div class="history-stat-value">8</div>
+                            <div class="history-stat-label">Total</div>
+                        </div>
+                        <div class="history-stat">
+                            <div class="history-stat-value">7</div>
+                            <div class="history-stat-label">Completed</div>
+                        </div>
+                        <div class="history-stat">
+                            <div class="history-stat-value">1</div>
+                            <div class="history-stat-label">No-Shows</div>
+                        </div>
+                        <div class="history-stat">
+                            <div class="history-stat-value">4.9</div>
+                            <div class="history-stat-label">Avg Rating</div>
+                        </div>
+                    </div>
+
+                    <div class="review-actions">
+                        <button class="btn btn-success" onclick="approveReview('APT-20260205-001')">
+                            <span>✅</span> Approve (Remove 6 months Restriction)
+                        </button>
+                        <button class="btn btn-danger" onclick="denyReview('APT-20260205-001')">
+                            <span>❌</span> Deny (Keep 6 months Restriction)
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Review Card 2 -->
+                <div class="review-card">
+                    <div class="review-header">
+                        <div class="review-student">
+                            <div class="review-student-avatar">RC</div>
+                            <div class="review-student-info">
+                                <h4>Roberto Carlos</h4>
+                                <p>STU-2024-022 • roberto.c@school.edu</p>
+                            </div>
+                        </div>
+                        <div class="review-date">
+                            <strong>Missed Date:</strong><br>
+                            February 4, 2026
+                        </div>
+                    </div>
+
+                    <div class="review-details">
+                        <div class="review-detail-row">
+                            <span class="review-label">Appointment ID</span>
+                            <span class="review-value">#APT-20260204-002</span>
+                        </div>
+                        <div class="review-detail-row">
+                            <span class="review-label">Purpose</span>
+                            <span class="review-value"><span class="purpose-tag extraction">Tooth Extraction</span></span>
+                        </div>
+                    </div>
+
+                    <div class="review-reason">
+                        <h5>📝 Reason Provided:</h5>
+                        <p><strong>Forgot About Appointment</strong><br>
+                        I'm really sorry, I completely forgot about the appointment. I didn't see the reminder notification. This won't happen again.</p>
+                    </div>
+
+                    <div class="review-history">
+                        <div class="history-stat">
+                            <div class="history-stat-value">3</div>
+                            <div class="history-stat-label">Total</div>
+                        </div>
+                        <div class="history-stat">
+                            <div class="history-stat-value">1</div>
+                            <div class="history-stat-label">Completed</div>
+                        </div>
+                        <div class="history-stat">
+                            <div class="history-stat-value">2</div>
+                            <div class="history-stat-label">No-Shows</div>
+                        </div>
+                        <div class="history-stat">
+                            <div class="history-stat-value">3.0</div>
+                            <div class="history-stat-label">Avg Rating</div>
+                        </div>
+                    </div>
+
+                    <div class="review-actions">
+                        <button class="btn btn-success" onclick="approveReview('APT-20260204-002')">
+                            <span>✅</span> Approve (Remove 6 months Restriction)
+                        </button>
+                        <button class="btn btn-danger" onclick="denyReview('APT-20260204-002')">
+                            <span>❌</span> Deny (Keep 6 months Restriction)
+                        </button>
+                    </div>
+                </div>
+
+                <!-- More reviews would go here... -->
+                <p style="text-align: center; color: #718096; margin-top: 20px;">
+                    Showing 2 of 4 pending reviews
+                </p>
+            </div>
+        </div>
+
+        <!-- Tab: Appointment History -->
+        <div class="tab-content" id="historyTab">
+            <div class="section-card">
+                <div class="section-header">
+                    <h3 class="section-title">
+                        <span>📜</span> Appointment History
+                    </h3>
+                    <div class="section-actions">
+                        <input type="date" style="padding: 10px; border: 2px solid #e2e8f0; border-radius: 8px;">
+                        <button class="btn btn-secondary">
+                            <span>🔍</span> Search
+                        </button>
+                    </div>
+                </div>
+
+                <table class="appointment-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Student</th>
+                            <th>Purpose</th>
+                            <th>Status</th>
+                            <th>Rating</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Feb 7, 2026</td>
+                            <td>
+                                <div class="student-info">
+                                    <div class="student-avatar">JD</div>
+                                    <div class="student-details">
+                                        <h4>Juan Dela Cruz</h4>
+                                        <p>STU-2024-001</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><span class="purpose-tag cleaning">Cleaning</span></td>
+                            <td><span class="status-badge completed">✅ Completed</span></td>
+                            <td>⭐⭐⭐⭐⭐</td>
+                        </tr>
+                        <tr>
+                            <td>Feb 7, 2026</td>
+                            <td>
+                                <div class="student-info">
+                                    <div class="student-avatar">MS</div>
+                                    <div class="student-details">
+                                        <h4>Maria Santos</h4>
+                                        <p>STU-2024-002</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><span class="purpose-tag extraction">Tooth Extraction</span></td>
+                            <td><span class="status-badge completed">✅ Completed</span></td>
+                            <td>⭐⭐⭐⭐</td>
+                        </tr>
+                        <tr>
+                            <td>Feb 5, 2026</td>
+                            <td>
+                                <div class="student-info">
+                                    <div class="student-avatar">AC</div>
+                                    <div class="student-details">
+                                        <h4>Anna Cruz</h4>
+                                        <p>STU-2024-015</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><span class="purpose-tag cleaning">Cleaning</span></td>
+                            <td><span class="status-badge noshow">❌ No-Show</span></td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td>Feb 4, 2026</td>
+                            <td>
+                                <div class="student-info">
+                                    <div class="student-avatar">RC</div>
+                                    <div class="student-details">
+                                        <h4>Roberto Carlos</h4>
+                                        <p>STU-2024-022</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><span class="purpose-tag extraction">Tooth Extraction</span></td>
+                            <td><span class="status-badge noshow">❌ No-Show</span></td>
+                            <td>-</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Tab: Student Management -->
+        <div class="tab-content" id="studentsTab">
+            <div class="section-card">
+                <div class="section-header">
+                    <h3 class="section-title">
+                        <span>👥</span> Student Management
+                    </h3>
+                    <div class="section-actions">
+                        <input type="text" placeholder="Search students..." style="padding: 10px 15px; border: 2px solid #e2e8f0; border-radius: 8px; width: 250px;">
+                    </div>
+                </div>
+
+                <div class="empty-state">
+                    <div class="empty-icon">👥</div>
+                    <h3>Student Management</h3>
+                    <p>Search for students to view their appointment history and manage restrictions</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Review Decision Modal -->
+    <div class="modal" id="reviewModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">Review Decision</h3>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Add notes for student (optional):</label>
+                    <textarea id="adminNotes" placeholder="Enter any additional notes or comments..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                <button class="btn btn-primary" id="modalConfirm" onclick="submitReviewDecision()">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentReviewId = null;
+        let currentReviewAction = null;
+
+        // Toggle dropdown
+        function toggleDropdown() {
+            const dropdown = document.getElementById('userDropdown');
+            dropdown.classList.toggle('active');
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            const userMenu = document.querySelector('.user-menu');
+            const dropdown = document.getElementById('userDropdown');
+            
+            if (userMenu && !userMenu.contains(event.target)) {
+                dropdown.classList.remove('active');
+            }
+        });
+
+        // Switch tabs
+        function switchTab(tabName) {
+            // Update tab buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.closest('.tab-btn').classList.add('active');
+
+            // Update tab content
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(tabName + 'Tab').classList.add('active');
+        }
+
+        // Mark appointment as complete
+        function markComplete(appointmentId) {
+            if (confirm('Mark this appointment as completed?')) {
+                alert(`Appointment ${appointmentId} marked as completed!`);
+                // In real app: AJAX call to update database
+                location.reload();
+            }
+        }
+
+        // Mark appointment as no-show
+        function markNoShow(appointmentId) {
+            if (confirm('Mark this appointment as no-show? Student will be notified and asked for a reason.')) {
+                alert(`Appointment ${appointmentId} marked as no-show. Student will receive notification.`);
+                // In real app: AJAX call to update database and send notification
+                location.reload();
+            }
+        }
+
+        // Approve review
+        function approveReview(appointmentId) {
+            currentReviewId = appointmentId;
+            currentReviewAction = 'approve';
+            document.getElementById('modalTitle').textContent = 'Approve Excuse';
+            document.getElementById('modalConfirm').textContent = 'Approve & Remove Restriction';
+            document.getElementById('modalConfirm').className = 'btn btn-success';
+            document.getElementById('reviewModal').classList.add('active');
+        }
+
+        // Deny review
+        function denyReview(appointmentId) {
+            currentReviewId = appointmentId;
+            currentReviewAction = 'deny';
+            document.getElementById('modalTitle').textContent = 'Deny Excuse';
+            document.getElementById('modalConfirm').textContent = 'Deny & Keep Restriction';
+            document.getElementById('modalConfirm').className = 'btn btn-danger';
+            document.getElementById('reviewModal').classList.add('active');
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('reviewModal').classList.remove('active');
+            document.getElementById('adminNotes').value = '';
+            currentReviewId = null;
+            currentReviewAction = null;
+        }
+
+        // Submit review decision
+        function submitReviewDecision() {
+            const notes = document.getElementById('adminNotes').value;
+            
+            if (currentReviewAction === 'approve') {
+                alert(`Excuse approved for ${currentReviewId}!\nStudent will be notified and restriction removed.\nNotes: ${notes || 'None'}`);
+            } else {
+                alert(`Excuse denied for ${currentReviewId}!\nStudent will be notified and restriction maintained.\nNotes: ${notes || 'None'}`);
+            }
+            
+            // In real app: AJAX call to save decision and send notification
+            closeModal();
+            location.reload();
+        }
+
+        // Export schedule
+        function exportSchedule() {
+            alert('Exporting schedule to Excel...\nIn real app: Generate and download Excel file');
+            // In real app: Generate Excel file with appointment data
+        }
+
+        // Load schedule for specific date
+        function loadSchedule(date) {
+            alert(`Loading schedule for ${date}...`);
+            // In real app: AJAX call to load appointments for selected date
+        }
+
+        // Logout
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                alert('Logging out...');
+                // window.location.href = 'login.php';
+            }
+        }
+    </script>
+</body>
+</html>
