@@ -1,0 +1,356 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f0f4f8;
+    padding: 40px 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.slip-container {
+    background: white;
+    max-width: 600px;
+    width: 100%;
+    border-radius: 15px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+
+/* Header with School Logo */
+.slip-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 30px;
+    text-align: center;
+    position: relative;
+}
+
+.school-logo {
+    width: 80px;
+    height: 80px;
+    background: white;
+    border-radius: 50%;
+    margin: 0 auto 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.slip-header h1 {
+    font-size: 24px;
+    margin-bottom: 5px;
+    font-weight: 700;
+}
+
+.slip-header p {
+    font-size: 14px;
+    opacity: 0.95;
+}
+
+/* Appointment Badge */
+.appointment-badge {
+    background: white;
+    color: #667eea;
+    display: inline-block;
+    padding: 8px 20px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-top: 15px;
+    letter-spacing: 1px;
+}
+
+/* Main Content */
+.slip-body {
+    padding: 40px 30px;
+}
+
+.appointment-id {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.appointment-id-label {
+    color: #718096;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+}
+
+.appointment-id-value {
+    font-size: 28px;
+    font-weight: 700;
+    color: #2d3748;
+    font-family: 'Courier New', monospace;
+    letter-spacing: 2px;
+}
+
+/* Details Section */
+.details-section {
+    margin-bottom: 30px;
+}
+
+.section-title {
+    color: #667eea;
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.detail-item {
+    display: flex;
+    padding: 18px 20px;
+    background: #f7fafc;
+    border-radius: 10px;
+    margin-bottom: 12px;
+    align-items: center;
+    border-left: 4px solid #667eea;
+}
+
+.detail-icon {
+    font-size: 24px;
+    margin-right: 15px;
+    width: 35px;
+    text-align: center;
+}
+
+.detail-content {
+    flex: 1;
+}
+
+.detail-label {
+    color: #718096;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 5px;
+}
+
+.detail-value {
+    color: #2d3748;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.detail-value.large {
+    font-size: 20px;
+    color: #667eea;
+}
+
+/* Purpose Badge */
+.purpose-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+    margin-top: 5px;
+}
+
+/* Important Notes */
+.important-notes {
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+    border-left: 4px solid #f59e0b;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 30px;
+}
+
+.important-notes h3 {
+    color: #92400e;
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.important-notes ul {
+    list-style: none;
+    padding: 0;
+}
+
+.important-notes li {
+    color: #78350f;
+    font-size: 13px;
+    margin-bottom: 8px;
+    padding-left: 20px;
+    position: relative;
+}
+
+.important-notes li:before {
+    content: "•";
+    position: absolute;
+    left: 5px;
+    font-weight: bold;
+}
+
+/* Footer */
+.slip-footer {
+    background: #2d3748;
+    color: white;
+    padding: 25px 30px;
+    text-align: center;
+}
+
+.validity-text {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.footer-note {
+    font-size: 12px;
+    opacity: 0.8;
+    line-height: 1.6;
+}
+
+/* Action Buttons */
+.action-buttons {
+    display: flex;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.btn {
+    flex: 1;
+    padding: 15px 20px;
+    border: none;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-align: center;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.btn-download {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.btn-download:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
+
+.btn-share {
+    background: #f7fafc;
+    color: #4a5568;
+    border: 2px solid #e2e8f0;
+}
+
+.btn-share:hover {
+    background: #edf2f7;
+}
+
+/* Print Styles */
+@media print {
+    body {
+        background: white;
+        padding: 0;
+    }
+
+    .slip-container {
+        box-shadow: none;
+        max-width: 100%;
+    }
+
+    .action-buttons {
+        display: none;
+    }
+
+    .slip-footer {
+        background: #f7fafc;
+        color: #2d3748;
+    }
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+    body {
+        padding: 20px 10px;
+    }
+
+    .slip-header {
+        padding: 25px 20px;
+    }
+
+    .slip-header h1 {
+        font-size: 20px;
+    }
+
+    .slip-body {
+        padding: 30px 20px;
+    }
+
+    .action-buttons {
+        flex-direction: column;
+    }
+
+    .appointment-id-value {
+        font-size: 22px;
+    }
+}
+
+/* Barcode Alternative */
+.barcode {
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    text-align: center;
+    margin-top: 10px;
+}
+
+.barcode-lines {
+    display: flex;
+    justify-content: center;
+    gap: 2px;
+    margin-bottom: 8px;
+}
+
+.barcode-line {
+    width: 3px;
+    height: 50px;
+    background: #2d3748;
+}
+
+.barcode-line:nth-child(even) {
+    height: 40px;
+}
+
+.barcode-line:nth-child(3n) {
+    width: 2px;
+}
+
+.barcode-text {
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    color: #4a5568;
+    letter-spacing: 3px;
+}

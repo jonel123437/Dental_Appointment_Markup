@@ -4,998 +4,243 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Dashboard - Dental Appointment System</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-        }
-
-        /* Fixed Header */
-        .header {
-            background: white;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-
-        .header-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 15px 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        /* Logo/Brand */
-        .header-brand {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .logo {
-            width: 45px;
-            height: 45px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-        }
-
-        .brand-text h1 {
-            color: #2d3748;
-            font-size: 20px;
-            font-weight: 700;
-        }
-
-        .brand-text p {
-            color: #718096;
-            font-size: 12px;
-        }
-
-        /* Header Navigation */
-        .header-nav {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        /* Book Appointment Button */
-        .btn-book {
-            padding: 10px 20px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            text-decoration: none;
-        }
-
-        .btn-book:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
-        }
-
-        /* Notification Icon */
-        .notification-icon {
-            position: relative;
-            cursor: pointer;
-            width: 40px;
-            height: 40px;
-            background: #f7fafc;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            transition: all 0.3s;
-        }
-
-        .notification-icon:hover {
-            background: #edf2f7;
-            transform: scale(1.05);
-        }
-
-        .notification-badge {
-            position: absolute;
-            top: -5px;
-            right: -5px;
-            background: #e53e3e;
-            color: white;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            font-size: 11px;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 2px solid white;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-        }
-
-        /* User Avatar with Dropdown */
-        .user-menu {
-            position: relative;
-        }
-
-        .user-avatar {
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s;
-            border: 3px solid transparent;
-        }
-
-        .user-avatar:hover {
-            border-color: #667eea;
-            transform: scale(1.05);
-        }
-
-        .user-dropdown {
-            position: absolute;
-            top: 60px;
-            right: 0;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
-            min-width: 250px;
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(-10px);
-            transition: all 0.3s;
-        }
-
-        .user-dropdown.active {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
-        }
-
-        .dropdown-header {
-            padding: 20px;
-            border-bottom: 1px solid #e2e8f0;
-        }
-
-        .dropdown-header h3 {
-            color: #2d3748;
-            font-size: 16px;
-            margin-bottom: 5px;
-        }
-
-        .dropdown-header p {
-            color: #718096;
-            font-size: 13px;
-        }
-
-        .dropdown-item {
-            padding: 15px 20px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            color: #4a5568;
-            text-decoration: none;
-            transition: all 0.2s;
-            cursor: pointer;
-            border: none;
-            background: none;
-            width: 100%;
-            text-align: left;
-            font-size: 14px;
-        }
-
-        .dropdown-item:hover {
-            background: #f7fafc;
-        }
-
-        .dropdown-item.logout {
-            color: #e53e3e;
-            border-top: 1px solid #e2e8f0;
-        }
-
-        .dropdown-item.logout:hover {
-            background: #fff5f5;
-        }
-
-        /* Burger Menu (Mobile Only) */
-        .burger-menu {
-            display: none;
-            flex-direction: column;
-            gap: 5px;
-            cursor: pointer;
-            padding: 8px;
-        }
-
-        .burger-line {
-            width: 25px;
-            height: 3px;
-            background: #2d3748;
-            border-radius: 3px;
-            transition: all 0.3s;
-        }
-
-        .burger-menu.active .burger-line:nth-child(1) {
-            transform: rotate(45deg) translate(8px, 8px);
-        }
-
-        .burger-menu.active .burger-line:nth-child(2) {
-            opacity: 0;
-        }
-
-        .burger-menu.active .burger-line:nth-child(3) {
-            transform: rotate(-45deg) translate(7px, -7px);
-        }
-
-        /* Mobile Menu */
-        .mobile-menu {
-            position: fixed;
-            top: 75px;
-            left: 0;
-            right: 0;
-            background: white;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
-            transform: translateY(-100%);
-            transition: all 0.3s;
-            z-index: 999;
-            display: none;
-        }
-
-        .mobile-menu.active {
-            transform: translateY(0);
-        }
-
-        .mobile-user-info {
-            padding: 25px 30px;
-            background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
-            border-bottom: 1px solid #e2e8f0;
-        }
-
-        .mobile-user-info h3 {
-            color: #2d3748;
-            font-size: 18px;
-            margin-bottom: 5px;
-        }
-
-        .mobile-user-info p {
-            color: #718096;
-            font-size: 13px;
-        }
-
-        .mobile-menu-item {
-            padding: 18px 30px;
-            border-bottom: 1px solid #e2e8f0;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            color: #2d3748;
-            text-decoration: none;
-            font-size: 15px;
-            transition: all 0.2s;
-            cursor: pointer;
-            background: white;
-            border-left: none;
-            border-right: none;
-            border-top: none;
-            width: 100%;
-            text-align: left;
-        }
-
-        .mobile-menu-item:hover {
-            background: #f7fafc;
-        }
-
-        .mobile-menu-item.logout {
-            color: #e53e3e;
-        }
-
-        /* Main Content */
-        .dashboard-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 25px 20px;
-        }
-
-        .welcome-section {
-            margin-bottom: 25px;
-        }
-
-        .welcome-text {
-            color: white;
-        }
-
-        .welcome-text h2 {
-            font-size: 28px;
-            font-weight: 700;
-            margin-bottom: 5px;
-        }
-
-        .welcome-text p {
-            font-size: 14px;
-            opacity: 0.9;
-        }
-
-        /* Main Grid */
-        .main-grid {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 25px;
-            margin-bottom: 25px;
-        }
-
-        /* Card Styles */
-        .card {
-            background: white;
-            border-radius: 15px;
-            padding: 30px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-        }
-
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .card-title {
-            font-size: 20px;
-            color: #2d3748;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .icon {
-            font-size: 24px;
-        }
-
-        .status-badge {
-            padding: 6px 16px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-            text-transform: uppercase;
-        }
-
-        .status-confirmed {
-            background: #c6f6d5;
-            color: #22543d;
-        }
-
-        .appointment-details {
-            background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
-            border-radius: 12px;
-            padding: 25px;
-            margin-bottom: 20px;
-        }
-
-        .detail-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 12px 0;
-            border-bottom: 1px solid #e2e8f0;
-        }
-
-        .detail-row:last-child {
-            border-bottom: none;
-        }
-
-        .detail-label {
-            color: #718096;
-            font-size: 14px;
-            font-weight: 600;
-        }
-
-        .detail-value {
-            color: #2d3748;
-            font-size: 14px;
-            font-weight: 600;
-            text-align: right;
-        }
-
-        .countdown {
-            background: white;
-            border-radius: 10px;
-            padding: 20px;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .countdown-label {
-            color: #718096;
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 10px;
-        }
-
-        .countdown-value {
-            font-size: 36px;
-            font-weight: 700;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .countdown-subtext {
-            color: #a0aec0;
-            font-size: 14px;
-            margin-top: 5px;
-        }
-
-        .action-buttons {
-            display: flex;
-            gap: 10px;
-        }
-
-        .btn {
-            padding: 12px 24px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 600;
-            transition: all 0.3s;
-            text-decoration: none;
-            display: inline-block;
-        }
-
-        .btn-full {
-            flex: 1;
-        }
-
-        .btn-view-slip {
-            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
-            color: white;
-        }
-
-        .btn-cancel {
-            background: #fed7d7;
-            color: #c53030;
-        }
-
-        .btn-view-slip:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(72, 187, 120, 0.4);
-        }
-
-        .btn-cancel:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(197, 48, 48, 0.3);
-        }
-
-        /* Quick Stats */
-        .quick-stats {
-            display: grid;
-            gap: 15px;
-        }
-
-        .stat-card {
-            background: white;
-            border-radius: 15px;
-            padding: 25px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-            text-align: center;
-        }
-
-        .stat-icon {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            margin: 0 auto 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 28px;
-        }
-
-        .stat-icon.purple {
-            background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
-        }
-
-        .stat-icon.green {
-            background: linear-gradient(135deg, #48bb7815 0%, #38a16915 100%);
-        }
-
-        .stat-icon.orange {
-            background: linear-gradient(135deg, #ed8f3615 0%, #dd6b2015 100%);
-        }
-
-        .stat-value {
-            font-size: 32px;
-            font-weight: 700;
-            color: #2d3748;
-            margin-bottom: 5px;
-        }
-
-        .stat-label {
-            color: #718096;
-            font-size: 14px;
-        }
-
-        .next-booking {
-            background: #f7fafc;
-            border-radius: 10px;
-            padding: 15px;
-            text-align: center;
-            margin-top: 10px;
-        }
-
-        .next-booking-label {
-            color: #718096;
-            font-size: 12px;
-            margin-bottom: 5px;
-        }
-
-        .next-booking-date {
-            color: #2d3748;
-            font-size: 16px;
-            font-weight: 700;
-        }
-
-        /* Appointment History */
-        .history-section {
-            background: white;
-            border-radius: 15px;
-            padding: 30px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-        }
-
-        .history-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 15px;
-            background: #f7fafc;
-            transition: all 0.3s;
-        }
-
-        .history-item:hover {
-            background: #edf2f7;
-            transform: translateX(5px);
-        }
-
-        .history-left {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .history-icon {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 22px;
-        }
-
-        .history-icon.completed {
-            background: #c6f6d5;
-            color: #22543d;
-        }
-
-        .history-icon.rated {
-            background: #fef3c7;
-            color: #92400e;
-        }
-
-        .history-icon.noshow {
-            background: #fed7d7;
-            color: #c53030;
-        }
-
-        .history-icon.cancelled {
-            background: #e2e8f0;
-            color: #4a5568;
-        }
-
-        .history-info h4 {
-            color: #2d3748;
-            font-size: 16px;
-            margin-bottom: 5px;
-        }
-
-        .history-info p {
-            color: #718096;
-            font-size: 13px;
-        }
-
-        .history-right {
-            text-align: right;
-        }
-
-        .history-date {
-            color: #4a5568;
-            font-size: 14px;
-            font-weight: 600;
-            margin-bottom: 5px;
-        }
-
-        .rating-stars {
-            color: #f59e0b;
-            font-size: 14px;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .header-container {
-                padding: 15px 20px;
-            }
-
-            .brand-text {
-                display: none;
-            }
-
-            .header-nav .btn-book,
-            .header-nav .notification-icon,
-            .header-nav .user-menu {
-                display: none;
-            }
-
-            .burger-menu {
-                display: flex;
-            }
-
-            .mobile-menu {
-                display: block;
-            }
-
-            .main-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .welcome-text h2 {
-                font-size: 24px;
-            }
-
-            .dashboard-container {
-                padding: 20px 15px;
-            }
-        }
-
-        @media (min-width: 769px) {
-            .burger-menu {
-                display: none !important;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
-<body>
-    <!-- Fixed Header -->
-    <header class="header">
-        <div class="header-container">
-            <!-- Brand/Logo -->
-            <div class="header-brand">
-                <div class="logo">🦷</div>
-                <div class="brand-text">
-                    <h1>Dental Clinic</h1>
-                    <p>Appointment System</p>
-                </div>
+  <body>
+  <!-- Fixed Header -->
+  <header class="header">
+    <div class="header-container">
+        <!-- Brand/Logo -->
+        <div class="header-brand">
+            <div class="logo">🦷</div>
+            <div class="brand-text">
+                <h1>Dental Clinic</h1>
+                <p>Appointment System</p>
+            </div>
+        </div>
+
+        <!-- Desktop Navigation -->
+        <nav class="header-nav">
+            <a href="#" class="btn-book">
+                <span>📅</span> Book Appointment
+            </a>
+
+            <!-- Notification Icon -->
+            <div class="notification-icon" onclick="alert('Notifications:\n• Appointment reminder in 2 days\n• Rating request pending\n• New announcement')">
+                🔔
+                <span class="notification-badge">3</span>
             </div>
 
-            <!-- Desktop Navigation -->
-            <nav class="header-nav">
-                <a href="#" class="btn-book">
-                    <span>📅</span> Book Appointment
-                </a>
-
-                <!-- Notification Icon -->
-                <div class="notification-icon" onclick="alert('Notifications:\n• Appointment reminder in 2 days\n• Rating request pending\n• New announcement')">
-                    🔔
-                    <span class="notification-badge">3</span>
-                </div>
-
-                <!-- User Menu -->
-                <div class="user-menu">
-                    <div class="user-avatar" onclick="toggleDropdown()">JD</div>
-                    <div class="user-dropdown" id="userDropdown">
-                        <div class="dropdown-header">
-                            <h3>Juan Dela Cruz</h3>
-                            <p>STU-2024-001</p>
-                        </div>
-                        <button class="dropdown-item logout" onclick="logout()">
-                            <span>🚪</span> Logout
-                        </button>
+            <!-- User Menu -->
+            <div class="user-menu">
+                <div class="user-avatar" onclick="toggleDropdown()">JD</div>
+                <div class="user-dropdown" id="userDropdown">
+                    <div class="dropdown-header">
+                        <h3>Juan Dela Cruz</h3>
+                        <p>STU-2024-001</p>
                     </div>
+                    <button class="dropdown-item logout" onclick="logout()">
+                        <span>🚪</span> Logout
+                    </button>
                 </div>
-            </nav>
-
-            <!-- Mobile Burger Menu -->
-            <div class="burger-menu" onclick="toggleMobileMenu()">
-                <div class="burger-line"></div>
-                <div class="burger-line"></div>
-                <div class="burger-line"></div>
             </div>
-        </div>
-    </header>
+        </nav>
 
-    <!-- Mobile Menu -->
-    <div class="mobile-menu" id="mobileMenu">
-        <div class="mobile-user-info">
-            <h3>Juan Dela Cruz</h3>
-            <p>Student ID: STU-2024-001</p>
+        <!-- Mobile Burger Menu -->
+        <div class="burger-menu" onclick="toggleMobileMenu()">
+            <div class="burger-line"></div>
+            <div class="burger-line"></div>
+            <div class="burger-line"></div>
         </div>
-        <a href="#" class="mobile-menu-item">
-            <span>📅</span> Book Appointment
-        </a>
-        <button class="mobile-menu-item" onclick="alert('Notifications')">
-            <span>🔔</span> Notifications
-            <span style="margin-left: auto; background: #e53e3e; color: white; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700;">3</span>
-        </button>
-        <button class="mobile-menu-item logout" onclick="logout()">
-            <span>🚪</span> Logout
-        </button>
+    </div>
+  </header>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" id="mobileMenu">
+    <div class="mobile-user-info">
+        <h3>Juan Dela Cruz</h3>
+        <p>Student ID: STU-2024-001</p>
+    </div>
+    <a href="#" class="mobile-menu-item">
+        <span>📅</span> Book Appointment
+    </a>
+    <button class="mobile-menu-item" onclick="alert('Notifications')">
+        <span>🔔</span> Notifications
+        <span style="margin-left: auto; background: #e53e3e; color: white; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700;">3</span>
+    </button>
+    <button class="mobile-menu-item logout" onclick="logout()">
+        <span>🚪</span> Logout
+    </button>
+  </div>
+
+  <!-- Main Dashboard Content -->
+  <div class="dashboard-container">
+    <!-- Welcome Section -->
+    <div class="welcome-section">
+        <div class="welcome-text">
+            <h2>Welcome back, Juan! 👋</h2>
+            <p>Here's your dental appointment overview</p>
+        </div>
     </div>
 
-    <!-- Main Dashboard Content -->
-    <div class="dashboard-container">
-        <!-- Welcome Section -->
-        <div class="welcome-section">
-            <div class="welcome-text">
-                <h2>Welcome back, Juan! 👋</h2>
-                <p>Here's your dental appointment overview</p>
-            </div>
-        </div>
-
-        <!-- Main Grid -->
-        <div class="main-grid">
-            <!-- Left Column: Upcoming Appointment -->
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title">
-                        <span class="icon">🦷</span>
-                        Upcoming Appointment
-                    </h3>
-                    <span class="status-badge status-confirmed">Confirmed</span>
-                </div>
-
-                <div class="countdown">
-                    <div class="countdown-label">Appointment in</div>
-                    <div class="countdown-value">8 Days</div>
-                    <div class="countdown-subtext">February 15, 2026</div>
-                </div>
-
-                <div class="appointment-details">
-                    <div class="detail-row">
-                        <span class="detail-label">📅 Date</span>
-                        <span class="detail-value">February 15, 2026 (Saturday)</span>
-                    </div>
-                    <div class="detail-row">
-                        <span class="detail-label">⏰ Time</span>
-                        <span class="detail-value">3:00 PM - 5:00 PM</span>
-                    </div>
-                    <div class="detail-row">
-                        <span class="detail-label">🦷 Purpose</span>
-                        <span class="detail-value">Cleaning</span>
-                    </div>
-                    <div class="detail-row">
-                        <span class="detail-label">📍 Location</span>
-                        <span class="detail-value">School Dental Clinic, Bldg A, 2nd Floor</span>
-                    </div>
-                    <div class="detail-row">
-                        <span class="detail-label">🔖 Appointment ID</span>
-                        <span class="detail-value">#APT-20260215-001</span>
-                    </div>
-                </div>
-
-                <div class="action-buttons">
-                    <button class="btn btn-view-slip btn-full" onclick="viewSlip()">📄 View Appointment Slip</button>
-                    <button class="btn btn-cancel btn-full" onclick="cancelAppointment()">❌ Cancel Appointment</button>
-                </div>
-
-                <p style="margin-top: 15px; color: #718096; font-size: 13px; text-align: center;">
-                    💡 You can cancel up to 48 hours before your appointment
-                </p>
-            </div>
-
-            <!-- Right Column: Quick Stats -->
-            <div class="quick-stats">
-                <div class="stat-card">
-                    <div class="stat-icon purple">📊</div>
-                    <div class="stat-value">12</div>
-                    <div class="stat-label">Total Appointments</div>
-                </div>
-
-                <div class="stat-card">
-                    <div class="stat-icon green">✅</div>
-                    <div class="stat-value">11</div>
-                    <div class="stat-label">Completed</div>
-                    <div class="next-booking">
-                        <div class="next-booking-label">Average Rating</div>
-                        <div class="next-booking-date">⭐⭐⭐⭐⭐ 4.8</div>
-                    </div>
-                </div>
-
-                <div class="stat-card">
-                    <div class="stat-icon orange">📅</div>
-                    <div class="stat-value">Aug 15</div>
-                    <div class="stat-label">Next Eligible Booking</div>
-                    <div class="next-booking">
-                        <div class="next-booking-label">6-month restriction ends</div>
-                        <div class="next-booking-date">After current appointment</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Appointment History -->
-        <div class="history-section">
+    <!-- Main Grid -->
+    <div class="main-grid">
+        <!-- Left Column: Upcoming Appointment -->
+        <div class="card">
             <div class="card-header">
                 <h3 class="card-title">
-                    <span class="icon">📜</span>
-                    Appointment History
+                    <span class="icon">🦷</span>
+                    Upcoming Appointment
                 </h3>
+                <span class="status-badge status-confirmed">Confirmed</span>
             </div>
 
-            <div class="history-item">
-                <div class="history-left">
-                    <div class="history-icon rated">⭐</div>
-                    <div class="history-info">
-                        <h4>Tooth Extraction</h4>
-                        <p>Completed & Rated</p>
-                    </div>
-                </div>
-                <div class="history-right">
-                    <div class="history-date">Oct 20, 2023</div>
-                    <div class="rating-stars">⭐⭐⭐⭐⭐</div>
-                </div>
+            <div class="countdown">
+                <div class="countdown-label">Appointment in</div>
+                <div class="countdown-value">8 Days</div>
+                <div class="countdown-subtext">February 15, 2026</div>
             </div>
 
-            <div class="history-item">
-                <div class="history-left">
-                    <div class="history-icon completed">✓</div>
-                    <div class="history-info">
-                        <h4>Pasta (Temporary Filling)</h4>
-                        <p>Completed</p>
-                    </div>
+            <div class="appointment-details">
+                <div class="detail-row">
+                    <span class="detail-label">📅 Date</span>
+                    <span class="detail-value">February 15, 2026 (Saturday)</span>
                 </div>
-                <div class="history-right">
-                    <div class="history-date">Apr 15, 2023</div>
+                <div class="detail-row">
+                    <span class="detail-label">⏰ Time</span>
+                    <span class="detail-value">3:00 PM - 5:00 PM</span>
                 </div>
-            </div>
-
-            <div class="history-item">
-                <div class="history-left">
-                    <div class="history-icon rated">⭐</div>
-                    <div class="history-info">
-                        <h4>Cleaning</h4>
-                        <p>Completed & Rated</p>
-                    </div>
+                <div class="detail-row">
+                    <span class="detail-label">🦷 Purpose</span>
+                    <span class="detail-value">Cleaning</span>
                 </div>
-                <div class="history-right">
-                    <div class="history-date">Nov 10, 2022</div>
-                    <div class="rating-stars">⭐⭐⭐⭐</div>
+                <div class="detail-row">
+                    <span class="detail-label">📍 Location</span>
+                    <span class="detail-value">School Dental Clinic, Bldg A, 2nd Floor</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">🔖 Appointment ID</span>
+                    <span class="detail-value">#APT-20260215-001</span>
                 </div>
             </div>
 
-            <div class="history-item">
-                <div class="history-left">
-                    <div class="history-icon noshow">✗</div>
-                    <div class="history-info">
-                        <h4>Cleaning</h4>
-                        <p>No-show (Excused - Medical Emergency)</p>
-                    </div>
-                </div>
-                <div class="history-right">
-                    <div class="history-date">May 5, 2022</div>
+            <div class="action-buttons">
+                <button class="btn btn-view-slip btn-full" onclick="viewSlip()">📄 View Appointment Slip</button>
+                <button class="btn btn-cancel btn-full" onclick="cancelAppointment()">❌ Cancel Appointment</button>
+            </div>
+
+            <p style="margin-top: 15px; color: #718096; font-size: 13px; text-align: center;">
+                💡 You can cancel up to 48 hours before your appointment
+            </p>
+        </div>
+
+        <!-- Right Column: Quick Stats -->
+        <div class="quick-stats">
+            <div class="stat-card">
+                <div class="stat-icon purple">📊</div>
+                <div class="stat-value">12</div>
+                <div class="stat-label">Total Appointments</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon green">✅</div>
+                <div class="stat-value">11</div>
+                <div class="stat-label">Completed</div>
+                <div class="next-booking">
+                    <div class="next-booking-label">Average Rating</div>
+                    <div class="next-booking-date">⭐⭐⭐⭐⭐ 4.8</div>
                 </div>
             </div>
 
-            <div class="history-item">
-                <div class="history-left">
-                    <div class="history-icon cancelled">🔄</div>
-                    <div class="history-info">
-                        <h4>Tooth Extraction</h4>
-                        <p>Cancelled by Student</p>
-                    </div>
-                </div>
-                <div class="history-right">
-                    <div class="history-date">Mar 12, 2022</div>
+            <div class="stat-card">
+                <div class="stat-icon orange">📅</div>
+                <div class="stat-value">Aug 15</div>
+                <div class="stat-label">Next Eligible Booking</div>
+                <div class="next-booking">
+                    <div class="next-booking-label">6-month restriction ends</div>
+                    <div class="next-booking-date">After current appointment</div>
                 </div>
             </div>
         </div>
     </div>
 
-    <script>
-        // Toggle user dropdown
-        function toggleDropdown() {
-            const dropdown = document.getElementById('userDropdown');
-            dropdown.classList.toggle('active');
-        }
+    <!-- Appointment History -->
+    <div class="history-section">
+        <div class="card-header">
+            <h3 class="card-title">
+                <span class="icon">📜</span>
+                Appointment History
+            </h3>
+        </div>
 
-        // Close dropdown when clicking outside
-        document.addEventListener('click', function(event) {
-            const userMenu = document.querySelector('.user-menu');
-            const dropdown = document.getElementById('userDropdown');
-            
-            if (userMenu && !userMenu.contains(event.target)) {
-                dropdown.classList.remove('active');
-            }
-        });
+        <div class="history-item">
+            <div class="history-left">
+                <div class="history-icon rated">⭐</div>
+                <div class="history-info">
+                    <h4>Tooth Extraction</h4>
+                    <p>Completed & Rated</p>
+                </div>
+            </div>
+            <div class="history-right">
+                <div class="history-date">Oct 20, 2023</div>
+                <div class="rating-stars">⭐⭐⭐⭐⭐</div>
+            </div>
+        </div>
 
-        // Toggle mobile menu
-        function toggleMobileMenu() {
-            const mobileMenu = document.getElementById('mobileMenu');
-            const burgerMenu = document.querySelector('.burger-menu');
-            
-            mobileMenu.classList.toggle('active');
-            burgerMenu.classList.toggle('active');
-        }
+        <div class="history-item">
+            <div class="history-left">
+                <div class="history-icon completed">✓</div>
+                <div class="history-info">
+                    <h4>Pasta (Temporary Filling)</h4>
+                    <p>Completed</p>
+                </div>
+            </div>
+            <div class="history-right">
+                <div class="history-date">Apr 15, 2023</div>
+            </div>
+        </div>
 
-        // Logout function
-        function logout() {
-            if (confirm('Are you sure you want to logout?')) {
-                alert('Logging out...');
-                // In real app: redirect to login page or clear session
-                // window.location.href = 'login.php';
-            }
-        }
+        <div class="history-item">
+            <div class="history-left">
+                <div class="history-icon rated">⭐</div>
+                <div class="history-info">
+                    <h4>Cleaning</h4>
+                    <p>Completed & Rated</p>
+                </div>
+            </div>
+            <div class="history-right">
+                <div class="history-date">Nov 10, 2022</div>
+                <div class="rating-stars">⭐⭐⭐⭐</div>
+            </div>
+        </div>
 
-        // View appointment slip
-        function viewSlip() {
-            alert('Opening appointment slip...');
-            // In real app: redirect to slip page
-            // window.location.href = 'appointment-slip.php?id=APT-20260215-001';
-        }
+        <div class="history-item">
+            <div class="history-left">
+                <div class="history-icon noshow">✗</div>
+                <div class="history-info">
+                    <h4>Cleaning</h4>
+                    <p>No-show (Excused - Medical Emergency)</p>
+                </div>
+            </div>
+            <div class="history-right">
+                <div class="history-date">May 5, 2022</div>
+            </div>
+        </div>
 
-        // Cancel appointment
-        function cancelAppointment() {
-            if (confirm('Are you sure you want to cancel this appointment? This action cannot be undone.')) {
-                alert('Appointment cancelled successfully!');
-                // In real app: make AJAX call to cancel appointment
-            }
-        }
-
-        // Simple countdown calculator
-        function updateCountdown() {
-            const appointmentDate = new Date('2026-02-15');
-            const today = new Date();
-            const diffTime = appointmentDate - today;
-            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-            
-            const countdownValue = document.querySelector('.countdown-value');
-            if (countdownValue && diffDays > 0) {
-                countdownValue.textContent = diffDays + ' Days';
-            }
-        }
-
-        // Call on page load
-        updateCountdown();
-    </script>
-</body>
+        <div class="history-item">
+            <div class="history-left">
+                <div class="history-icon cancelled">🔄</div>
+                <div class="history-info">
+                    <h4>Tooth Extraction</h4>
+                    <p>Cancelled by Student</p>
+                </div>
+            </div>
+            <div class="history-right">
+                <div class="history-date">Mar 12, 2022</div>
+            </div>
+        </div>
+    </div>
+  </div>
+  <script src="scripts.js"></script>
+  </body>
 </html>

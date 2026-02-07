@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dental Appointment Slip</title>
+    <link rel="stylesheet" href="appointment-slip.css">
+</head>
+<body>
+    <div class="slip-container">
+        <!-- Header -->
+        <div class="slip-header">
+            <div class="school-logo">🏫</div>
+            <h1>University Dental Clinic</h1>
+            <p>School Health Services Department</p>
+            <div class="appointment-badge">Dental Appointment Slip</div>
+        </div>
+
+        <!-- Body -->
+        <div class="slip-body">
+            <!-- Appointment ID -->
+            <div class="appointment-id">
+                <div class="appointment-id-label">Appointment ID</div>
+                <div class="appointment-id-value">#APT-20260215-001</div>
+            </div>
+
+            <!-- Student Information -->
+            <div class="details-section">
+                <div class="section-title">
+                    <span>👤</span> Student Information
+                </div>
+                
+                <div class="detail-item">
+                    <div class="detail-icon">📝</div>
+                    <div class="detail-content">
+                        <div class="detail-label">Full Name</div>
+                        <div class="detail-value">Juan Dela Cruz</div>
+                    </div>
+                </div>
+
+                <div class="detail-item">
+                    <div class="detail-icon">🆔</div>
+                    <div class="detail-content">
+                        <div class="detail-label">Student ID</div>
+                        <div class="detail-value">STU-2024-001</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Appointment Details -->
+            <div class="details-section">
+                <div class="section-title">
+                    <span>📅</span> Appointment Details
+                </div>
+
+                <div class="detail-item">
+                    <div class="detail-icon">📆</div>
+                    <div class="detail-content">
+                        <div class="detail-label">Date</div>
+                        <div class="detail-value large">February 15, 2026</div>
+                    </div>
+                </div>
+
+                <div class="detail-item">
+                    <div class="detail-icon">⏰</div>
+                    <div class="detail-content">
+                        <div class="detail-label">Time</div>
+                        <div class="detail-value large">3:00 PM - 5:00 PM</div>
+                    </div>
+                </div>
+
+                <div class="detail-item">
+                    <div class="detail-icon">🦷</div>
+                    <div class="detail-content">
+                        <div class="detail-label">Purpose of Visit</div>
+                        <div class="purpose-badge">Cleaning</div>
+                    </div>
+                </div>
+
+                <div class="detail-item">
+                    <div class="detail-icon">📍</div>
+                    <div class="detail-content">
+                        <div class="detail-label">Location</div>
+                        <div class="detail-value">School Dental Clinic</div>
+                        <div style="color: #718096; font-size: 13px; margin-top: 3px;">Building A, 2nd Floor, Room 205</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Important Notes -->
+            <div class="important-notes">
+                <h3>
+                    <span>⚠️</span> Important Reminders
+                </h3>
+                <ul>
+                    <li>Please arrive anytime between 3:00 PM - 5:00 PM</li>
+                    <li>Students will be served on a first-come, first-served basis</li>
+                    <li>Bring this appointment slip (printed or digital) to the clinic</li>
+                    <li>If you cannot attend, please cancel at least 48 hours in advance</li>
+                    <li>Bring your student ID for verification</li>
+                </ul>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <button class="btn btn-download" onclick="window.print()">
+                    <span>📥</span> Print / Save as PDF
+                </button>
+                <button class="btn btn-share" onclick="shareSlip()">
+                    <span>📤</span> Share
+                </button>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="slip-footer">
+            <div class="validity-text">
+                This appointment is valid for February 15, 2026 only
+            </div>
+            <div class="footer-note">
+                For questions or concerns, please contact the Dental Clinic at (123) 456-7890<br>
+                or email dentalclinic@school.edu
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function shareSlip() {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Dental Appointment Slip',
+                    text: 'My dental appointment on February 15, 2026 at 3:00 PM - 5:00 PM',
+                    url: window.location.href
+                }).then(() => {
+                    console.log('Shared successfully');
+                }).catch((error) => {
+                    console.log('Error sharing:', error);
+                    fallbackShare();
+                });
+            } else {
+                fallbackShare();
+            }
+        }
+
+        function fallbackShare() {
+            alert('Screenshot this page to share your appointment slip!');
+        }
+
+        // Auto-print functionality (optional - can be triggered from dashboard)
+        // window.onload = function() {
+        //     window.print();
+        // }
+    </script>
+</body>
+</html>
