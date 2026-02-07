@@ -58,5 +58,9 @@ function updateCountdown() {
     }
 }
 
+function bookAppointment() {
+    window.location.href = 'book-appointment.html'
+}
+
 // Call on page load
 updateCountdown();
