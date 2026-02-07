@@ -34,7 +34,7 @@ function logout() {
 
 // View appointment slip
 function viewSlip() {
-    window.location.href = 'appointment-slip.html';
+    window.location.href = 'appointment-slip/appointment-slip.html';
 }
 
 // Cancel appointment
@@ -59,7 +59,7 @@ function updateCountdown() {
 }
 
 function bookAppointment() {
-    window.location.href = 'book-appointment.html'
+    window.location.href = 'book-appointment/book-appointment.html'
 }
 
 // Call on page load
