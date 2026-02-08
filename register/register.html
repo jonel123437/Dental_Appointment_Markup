@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Dental Appointment System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .register-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+            max-width: 900px;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            animation: slideUp 0.5s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Left Side - Branding */
+        .register-brand {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 60px 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: white;
+        }
+
+        .brand-logo {
+            width: 100px;
+            height: 100px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 50px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .brand-logo:hover {
+            transform: scale(1.1) rotate(10deg);
+            transition: all 0.3s;
+        }
+
+        .register-brand h1 {
+            font-size: 28px;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .register-brand p {
+            font-size: 16px;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        .brand-benefits {
+            margin-top: 40px;
+            text-align: left;
+        }
+
+        .benefit-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .benefit-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        /* Right Side - Form */
+        .register-form-container {
+            padding: 60px 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .form-header {
+            margin-bottom: 35px;
+        }
+
+        .form-header h2 {
+            color: #2d3748;
+            font-size: 32px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .form-header p {
+            color: #718096;
+            font-size: 15px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #4a5568;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #a0aec0;
+            font-size: 18px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 15px 15px 15px 45px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 15px;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-control.error {
+            border-color: #e53e3e;
+        }
+
+        .form-control.success {
+            border-color: #48bb78;
+        }
+
+        .form-control::placeholder {
+            color: #cbd5e0;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #a0aec0;
+            cursor: pointer;
+            font-size: 18px;
+            transition: all 0.3s;
+        }
+
+        .password-toggle:hover {
+            color: #667eea;
+        }
+
+        .help-text {
+            font-size: 12px;
+            color: #718096;
+            margin-top: 5px;
+        }
+
+        .error-text {
+            font-size: 12px;
+            color: #e53e3e;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .error-text.show {
+            display: block;
+        }
+
+        .success-text {
+            font-size: 12px;
+            color: #48bb78;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .success-text.show {
+            display: block;
+        }
+
+        /* Password Strength Indicator */
+        .password-strength {
+            margin-top: 8px;
+            display: none;
+        }
+
+        .password-strength.show {
+            display: block;
+        }
+
+        .strength-bar {
+            height: 4px;
+            background: #e2e8f0;
+            border-radius: 2px;
+            overflow: hidden;
+            margin-bottom: 5px;
+        }
+
+        .strength-bar-fill {
+            height: 100%;
+            transition: all 0.3s;
+            border-radius: 2px;
+        }
+
+        .strength-bar-fill.weak {
+            width: 33%;
+            background: #e53e3e;
+        }
+
+        .strength-bar-fill.medium {
+            width: 66%;
+            background: #f59e0b;
+        }
+
+        .strength-bar-fill.strong {
+            width: 100%;
+            background: #48bb78;
+        }
+
+        .strength-text {
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .strength-text.weak {
+            color: #e53e3e;
+        }
+
+        .strength-text.medium {
+            color: #f59e0b;
+        }
+
+        .strength-text.strong {
+            color: #48bb78;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: start;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            margin-top: 2px;
+        }
+
+        .checkbox-group label {
+            font-size: 13px;
+            color: #4a5568;
+            line-height: 1.5;
+            cursor: pointer;
+        }
+
+        .checkbox-group label a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .checkbox-group label a:hover {
+            text-decoration: underline;
+        }
+
+        .btn-register {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 20px;
+        }
+
+        .btn-register:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-register:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-register:active {
+            transform: translateY(0);
+        }
+
+        .divider {
+            text-align: center;
+            margin: 20px 0;
+            position: relative;
+        }
+
+        .divider::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 100%;
+            height: 1px;
+            background: #e2e8f0;
+        }
+
+        .divider span {
+            background: white;
+            padding: 0 15px;
+            color: #a0aec0;
+            font-size: 14px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .login-link {
+            text-align: center;
+            color: #718096;
+            font-size: 14px;
+        }
+
+        .login-link a {
+            color: #667eea;
+            font-weight: 700;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .login-link a:hover {
+            color: #764ba2;
+            text-decoration: underline;
+        }
+
+        .alert {
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            display: none;
+        }
+
+        .alert.error {
+            background: #fed7d7;
+            color: #c53030;
+            border-left: 4px solid #c53030;
+            display: block;
+        }
+
+        .alert.success {
+            background: #c6f6d5;
+            color: #22543d;
+            border-left: 4px solid #22543d;
+            display: block;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .register-container {
+                grid-template-columns: 1fr;
+            }
+
+            .register-brand {
+                padding: 40px 30px;
+            }
+
+            .brand-benefits {
+                display: none;
+            }
+
+            .register-form-container {
+                padding: 40px 30px;
+            }
+
+            .form-header h2 {
+                font-size: 26px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="register-container">
+        <!-- Left Side - Branding -->
+        <div class="register-brand">
+            <div class="brand-logo">🦷</div>
+            <h1>Join Our Dental Care</h1>
+            <p>Create your account and start managing your dental appointments easily</p>
+
+            <div class="brand-benefits">
+                <div class="benefit-item">
+                    <div class="benefit-icon">⚡</div>
+                    <div>Quick and easy registration</div>
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-icon">🔒</div>
+                    <div>Secure and private data</div>
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-icon">📱</div>
+                    <div>Access from any device</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Side - Registration Form -->
+        <div class="register-form-container">
+            <div class="form-header">
+                <h2>Create Account</h2>
+                <p>Fill in your details to get started</p>
+            </div>
+
+            <!-- Alert Messages -->
+            <div class="alert error" id="errorAlert" style="display: none;">
+                Registration failed. Please check your information.
+            </div>
+
+            <!-- Registration Form -->
+            <form id="registerForm" onsubmit="handleRegister(event)">
+                <div class="form-group">
+                    <label for="studentId">Student ID *</label>
+                    <div class="input-wrapper">
+                        <span class="input-icon">🆔</span>
+                        <input 
+                            type="text" 
+                            id="studentId" 
+                            class="form-control" 
+                            placeholder="Enter your Student ID (e.g., STU-2024-001)" 
+                            required
+                            oninput="validateStudentId()"
+                        >
+                    </div>
+                    <div class="help-text">Use your official school-issued Student ID</div>
+                    <div class="error-text" id="studentIdError">Invalid Student ID format</div>
+                    <div class="success-text" id="studentIdSuccess">✓ Student ID is valid</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password *</label>
+                    <div class="input-wrapper">
+                        <span class="input-icon">🔒</span>
+                        <input 
+                            type="password" 
+                            id="password" 
+                            class="form-control" 
+                            placeholder="Create a strong password" 
+                            required
+                            oninput="validatePassword()"
+                        >
+                        <button type="button" class="password-toggle" onclick="togglePassword('password')">
+                            👁️
+                        </button>
+                    </div>
+                    <div class="password-strength" id="passwordStrength">
+                        <div class="strength-bar">
+                            <div class="strength-bar-fill" id="strengthBarFill"></div>
+                        </div>
+                        <div class="strength-text" id="strengthText">Password strength</div>
+                    </div>
+                    <div class="help-text">Minimum 8 characters, include letters and numbers</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm Password *</label>
+                    <div class="input-wrapper">
+                        <span class="input-icon">🔒</span>
+                        <input 
+                            type="password" 
+                            id="confirmPassword" 
+                            class="form-control" 
+                            placeholder="Re-enter your password" 
+                            required
+                            oninput="validateConfirmPassword()"
+                        >
+                        <button type="button" class="password-toggle" onclick="togglePassword('confirmPassword')">
+                            👁️
+                        </button>
+                    </div>
+                    <div class="error-text" id="confirmPasswordError">Passwords do not match</div>
+                    <div class="success-text" id="confirmPasswordSuccess">✓ Passwords match</div>
+                </div>
+
+                <div class="checkbox-group">
+                    <input type="checkbox" id="agreeTerms" required>
+                    <label for="agreeTerms">
+                        I agree to the <a href="#" target="_blank">Terms of Service</a> and <a href="#" target="_blank">Privacy Policy</a>
+                    </label>
+                </div>
+
+                <button type="submit" class="btn-register" id="registerBtn" disabled>
+                    Create Account
+                </button>
+            </form>
+
+            <div class="divider">
+                <span>Already have an account?</span>
+            </div>
+
+            <div class="login-link">
+                <a href="../login/login.html">Login here</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let isStudentIdValid = false;
+        let isPasswordValid = false;
+        let isConfirmPasswordValid = false;
+
+        function validateStudentId() {
+            const studentId = document.getElementById('studentId').value;
+            const studentIdInput = document.getElementById('studentId');
+            const errorText = document.getElementById('studentIdError');
+            const successText = document.getElementById('studentIdSuccess');
+
+            // Simple validation: Check if it matches pattern like STU-YYYY-XXX
+            const pattern = /^STU-\d{4}-\d{3}$/;
+            
+            if (studentId.length === 0) {
+                studentIdInput.classList.remove('error', 'success');
+                errorText.classList.remove('show');
+                successText.classList.remove('show');
+                isStudentIdValid = false;
+            } else if (pattern.test(studentId)) {
+                studentIdInput.classList.remove('error');
+                studentIdInput.classList.add('success');
+                errorText.classList.remove('show');
+                successText.classList.add('show');
+                isStudentIdValid = true;
+            } else {
+                studentIdInput.classList.remove('success');
+                studentIdInput.classList.add('error');
+                errorText.classList.add('show');
+                successText.classList.remove('show');
+                isStudentIdValid = false;
+            }
+
+            updateRegisterButton();
+        }
+
+        function validatePassword() {
+            const password = document.getElementById('password').value;
+            const passwordInput = document.getElementById('password');
+            const strengthContainer = document.getElementById('passwordStrength');
+            const strengthBarFill = document.getElementById('strengthBarFill');
+            const strengthText = document.getElementById('strengthText');
+
+            if (password.length === 0) {
+                strengthContainer.classList.remove('show');
+                passwordInput.classList.remove('error', 'success');
+                isPasswordValid = false;
+                updateRegisterButton();
+                return;
+            }
+
+            strengthContainer.classList.add('show');
+
+            // Calculate password strength
+            let strength = 0;
+            if (password.length >= 8) strength++;
+            if (password.length >= 12) strength++;
+            if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength++;
+            if (/\d/.test(password)) strength++;
+            if (/[^a-zA-Z0-9]/.test(password)) strength++;
+
+            // Update strength indicator
+            strengthBarFill.className = 'strength-bar-fill';
+            strengthText.className = 'strength-text';
+
+            if (strength <= 2) {
+                strengthBarFill.classList.add('weak');
+                strengthText.classList.add('weak');
+                strengthText.textContent = 'Weak password';
+                passwordInput.classList.remove('success');
+                passwordInput.classList.add('error');
+                isPasswordValid = false;
+            } else if (strength <= 4) {
+                strengthBarFill.classList.add('medium');
+                strengthText.classList.add('medium');
+                strengthText.textContent = 'Medium strength';
+                passwordInput.classList.remove('error');
+                passwordInput.classList.add('success');
+                isPasswordValid = true;
+            } else {
+                strengthBarFill.classList.add('strong');
+                strengthText.classList.add('strong');
+                strengthText.textContent = 'Strong password';
+                passwordInput.classList.remove('error');
+                passwordInput.classList.add('success');
+                isPasswordValid = true;
+            }
+
+            // Re-validate confirm password if it has a value
+            if (document.getElementById('confirmPassword').value) {
+                validateConfirmPassword();
+            }
+
+            updateRegisterButton();
+        }
+
+        function validateConfirmPassword() {
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const confirmPasswordInput = document.getElementById('confirmPassword');
+            const errorText = document.getElementById('confirmPasswordError');
+            const successText = document.getElementById('confirmPasswordSuccess');
+
+            if (confirmPassword.length === 0) {
+                confirmPasswordInput.classList.remove('error', 'success');
+                errorText.classList.remove('show');
+                successText.classList.remove('show');
+                isConfirmPasswordValid = false;
+            } else if (password === confirmPassword) {
+                confirmPasswordInput.classList.remove('error');
+                confirmPasswordInput.classList.add('success');
+                errorText.classList.remove('show');
+                successText.classList.add('show');
+                isConfirmPasswordValid = true;
+            } else {
+                confirmPasswordInput.classList.remove('success');
+                confirmPasswordInput.classList.add('error');
+                errorText.classList.add('show');
+                successText.classList.remove('show');
+                isConfirmPasswordValid = false;
+            }
+
+            updateRegisterButton();
+        }
+
+        function updateRegisterButton() {
+            const registerBtn = document.getElementById('registerBtn');
+            const agreeTerms = document.getElementById('agreeTerms').checked;
+
+            if (isStudentIdValid && isPasswordValid && isConfirmPasswordValid && agreeTerms) {
+                registerBtn.disabled = false;
+            } else {
+                registerBtn.disabled = true;
+            }
+        }
+
+        // Also check terms checkbox
+        document.getElementById('agreeTerms').addEventListener('change', updateRegisterButton);
+
+        function togglePassword(fieldId) {
+            const passwordInput = document.getElementById(fieldId);
+            const toggleBtn = event.target;
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleBtn.textContent = '🙈';
+            } else {
+                passwordInput.type = 'password';
+                toggleBtn.textContent = '👁️';
+            }
+        }
+
+        function handleRegister(event) {
+            event.preventDefault();
+            
+            const studentId = document.getElementById('studentId').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const agreeTerms = document.getElementById('agreeTerms').checked;
+
+            // Final validation
+            if (!isStudentIdValid || !isPasswordValid || !isConfirmPasswordValid || !agreeTerms) {
+                alert('Please fill in all fields correctly');
+                return;
+            }
+
+            console.log('Registration attempt:', {
+                studentId: studentId,
+                password: password,
+                agreeTerms: agreeTerms
+            });
+
+            // Demo success
+            alert('Registration successful!\n\nStudent ID: ' + studentId + '\n\nYou can now login with your credentials.');
+            window.location.href = 'login.html';
+
+            // In real app:
+            /*
+            fetch('register.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    student_id: studentId,
+                    password: password,
+                    agree_terms: agreeTerms
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Registration successful! Please login.');
+                    window.location.href = 'login.html';
+                } else {
+                    const errorAlert = document.getElementById('errorAlert');
+                    errorAlert.textContent = data.message;
+                    errorAlert.style.display = 'block';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                const errorAlert = document.getElementById('errorAlert');
+                errorAlert.textContent = 'An error occurred. Please try again.';
+                errorAlert.style.display = 'block';
+            });
+            */
+        }
+    </script>
+</body>
+</html>

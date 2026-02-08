@@ -26,15 +26,13 @@ function toggleMobileMenu() {
 // Logout function
 function logout() {
     if (confirm('Are you sure you want to logout?')) {
-        alert('Logging out...');
-        // In real app: redirect to login page or clear session
-        // window.location.href = 'login.php';
+        window.location.href = '../login/login.html';
     }
 }
 
 // View appointment slip
 function viewSlip() {
-    window.location.href = 'appointment-slip/appointment-slip.html';
+    window.location.href = '../appointment-slip/appointment-slip.html';
 }
 
 // Cancel appointment
@@ -59,8 +57,13 @@ function updateCountdown() {
 }
 
 function bookAppointment() {
-    window.location.href = 'book-appointment/book-appointment.html'
+    window.location.href = '../book-appointment/book-appointment.html'
 }
+
+function goToNotifications() {
+  window.location.href = '../notification/notifications.html';
+}
+
 
 // Call on page load
 updateCountdown();

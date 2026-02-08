@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notifications - Dental Appointment System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        /* Fixed Header */
+        .header {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .brand-text h1 {
+            color: #2d3748;
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .brand-text p {
+            color: #718096;
+            font-size: 12px;
+        }
+
+        .back-button {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: #f7fafc;
+            color: #4a5568;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+
+        .back-button:hover {
+            background: #edf2f7;
+        }
+
+        /* Main Container */
+        .notifications-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+
+        /* Page Header */
+        .page-header {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .page-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .page-title h2 {
+            color: #2d3748;
+            font-size: 28px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .notification-count {
+            background: #e53e3e;
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #4a5568;
+            border: 2px solid #e2e8f0;
+        }
+
+        .btn-secondary:hover {
+            background: #f7fafc;
+        }
+
+        /* Filter Tabs */
+        .filter-tabs {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .filter-tab {
+            padding: 8px 16px;
+            background: #f7fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #4a5568;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .filter-tab:hover {
+            border-color: #667eea;
+            background: #edf2f7;
+        }
+
+        .filter-tab.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-color: #667eea;
+            color: white;
+        }
+
+        .tab-badge {
+            background: rgba(255,255,255,0.3);
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .filter-tab.active .tab-badge {
+            background: rgba(255,255,255,0.3);
+        }
+
+        /* Notifications List */
+        .notifications-section {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .notification-item {
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            transition: all 0.3s;
+            cursor: pointer;
+            position: relative;
+            border: 2px solid transparent;
+        }
+
+        .notification-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .notification-item.unread {
+            background: linear-gradient(135deg, #667eea08 0%, #764ba208 100%);
+            border-color: #667eea;
+        }
+
+        .notification-item.unread::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 12px 0 0 12px;
+        }
+
+        .notification-item.read {
+            background: #f7fafc;
+        }
+
+        .notification-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 12px;
+        }
+
+        .notification-icon-wrapper {
+            display: flex;
+            align-items: start;
+            gap: 15px;
+            flex: 1;
+        }
+
+        .notification-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+
+        .notification-icon.success {
+            background: linear-gradient(135deg, #48bb7815 0%, #38a16915 100%);
+        }
+
+        .notification-icon.warning {
+            background: linear-gradient(135deg, #f59e0b15 0%, #d9770615 100%);
+        }
+
+        .notification-icon.info {
+            background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+        }
+
+        .notification-icon.error {
+            background: linear-gradient(135deg, #e53e3e15 0%, #c5303015 100%);
+        }
+
+        .notification-content {
+            flex: 1;
+        }
+
+        .notification-title {
+            color: #2d3748;
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .notification-message {
+            color: #4a5568;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 8px;
+        }
+
+        .notification-meta {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 12px;
+            color: #a0aec0;
+        }
+
+        .notification-time {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .notification-type {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .type-confirmation {
+            background: #c6f6d5;
+            color: #22543d;
+        }
+
+        .type-reminder {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .type-review {
+            background: #fed7d7;
+            color: #c53030;
+        }
+
+        .type-decision {
+            background: #bee3f8;
+            color: #2c5282;
+        }
+
+        .type-system {
+            background: #e2e8f0;
+            color: #4a5568;
+        }
+
+        .notification-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .action-btn {
+            width: 32px;
+            height: 32px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s;
+            background: white;
+            border: 2px solid #e2e8f0;
+        }
+
+        .action-btn:hover {
+            transform: scale(1.1);
+            border-color: #667eea;
+        }
+
+        .action-btn.delete {
+            color: #e53e3e;
+        }
+
+        .action-btn.delete:hover {
+            background: #fff5f5;
+            border-color: #e53e3e;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #a0aec0;
+        }
+
+        .empty-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        .empty-state h3 {
+            color: #4a5568;
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+
+        .empty-state p {
+            font-size: 14px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-container {
+                padding: 15px 20px;
+            }
+
+            .brand-text {
+                display: none;
+            }
+
+            .notifications-container {
+                padding: 20px 15px;
+            }
+
+            .page-header {
+                padding: 20px;
+            }
+
+            .page-title {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+
+            .page-title h2 {
+                font-size: 24px;
+            }
+
+            .header-actions {
+                width: 100%;
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .notification-item {
+                padding: 15px;
+            }
+
+            .notification-icon-wrapper {
+                flex-direction: column;
+            }
+
+            .notification-actions {
+                margin-top: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Fixed Header -->
+    <header class="header">
+        <div class="header-container">
+            <div class="header-brand">
+                <div class="logo">🦷</div>
+                <div class="brand-text">
+                    <h1>Dental Clinic</h1>
+                    <p>Notifications</p>
+                </div>
+            </div>
+            <a href="#" class="back-button" onclick="goBack()">
+                <span>←</span> Back to Dashboard
+            </a>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="notifications-container">
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="page-title">
+                <h2>
+                    🔔 Notifications
+                    <span class="notification-count" id="unreadCount">5</span>
+                </h2>
+                <div class="header-actions">
+                    <button class="btn btn-primary" onclick="markAllAsRead()">
+                        <span>✓</span> Mark All as Read
+                    </button>
+                    <button class="btn btn-secondary" onclick="deleteAll()">
+                        <span>🗑️</span> Clear All
+                    </button>
+                </div>
+            </div>
+
+            <!-- Filter Tabs -->
+            <div class="filter-tabs">
+                <div class="filter-tab active" onclick="filterNotifications('all', this)">
+                    All <span class="tab-badge">8</span>
+                </div>
+                <div class="filter-tab" onclick="filterNotifications('unread', this)">
+                    Unread <span class="tab-badge">5</span>
+                </div>
+                <div class="filter-tab" onclick="filterNotifications('confirmation', this)">
+                    Confirmations <span class="tab-badge">2</span>
+                </div>
+                <div class="filter-tab" onclick="filterNotifications('reminder', this)">
+                    Reminders <span class="tab-badge">2</span>
+                </div>
+                <div class="filter-tab" onclick="filterNotifications('review', this)">
+                    Reviews <span class="tab-badge">1</span>
+                </div>
+                <div class="filter-tab" onclick="filterNotifications('decision', this)">
+                    Decisions <span class="tab-badge">2</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Notifications List -->
+        <div class="notifications-section" id="notificationsList">
+            <!-- Unread Notification 1 - Reminder -->
+            <div class="notification-item unread" data-type="reminder" data-read="false">
+                <div class="notification-header">
+                    <div class="notification-icon-wrapper">
+                        <div class="notification-icon warning">⏰</div>
+                        <div class="notification-content">
+                            <div class="notification-title">🦷 Dental Appointment Reminder</div>
+                            <div class="notification-message">
+                                Your appointment is <strong>TODAY at 3:00 PM - 5:00 PM</strong>. Your appointment slip is ready to view. Please arrive on time and bring your appointment slip (printed or digital).
+                            </div>
+                            <div class="notification-meta">
+                                <div class="notification-time">
+                                    <span>🕐</span> 2 hours ago
+                                </div>
+                                <span class="notification-type type-reminder">Reminder</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="notification-actions">
+                        <button class="action-btn delete" onclick="deleteNotification(event)" title="Delete">
+                            🗑️
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Unread Notification 2 - Confirmation -->
+            <div class="notification-item unread" data-type="confirmation" data-read="false">
+                <div class="notification-header">
+                    <div class="notification-icon-wrapper">
+                        <div class="notification-icon success">✅</div>
+                        <div class="notification-content">
+                            <div class="notification-title">✅ Appointment Confirmed!</div>
+                            <div class="notification-message">
+                                <strong>Date:</strong> February 15, 2026<br>
+                                <strong>Time:</strong> 3:00 PM - 5:00 PM<br>
+                                <strong>Purpose:</strong> Cleaning<br>
+                                <strong>Location:</strong> School Dental Clinic, Building A, 2nd Floor
+                            </div>
+                            <div class="notification-meta">
+                                <div class="notification-time">
+                                    <span>🕐</span> 5 hours ago
+                                </div>
+                                <span class="notification-type type-confirmation">Confirmation</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="notification-actions">
+                        <button class="action-btn delete" onclick="deleteNotification(event)" title="Delete">
+                            🗑️
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Unread Notification 3 - Review Request -->
+            <div class="notification-item unread" data-type="review" data-read="false">
+                <div class="notification-header">
+                    <div class="notification-icon-wrapper">
+                        <div class="notification-icon warning">⭐</div>
+                        <div class="notification-content">
+                            <div class="notification-title">⭐ Rate Your Experience</div>
+                            <div class="notification-message">
+                                You attended your dental appointment yesterday. How was your experience? Please take a moment to rate your visit and help us improve our service.
+                            </div>
+                            <div class="notification-meta">
+                                <div class="notification-time">
+                                    <span>🕐</span> 1 day ago
+                                </div>
+                                <span class="notification-type type-review">Review</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="notification-actions">
+                        <button class="action-btn delete" onclick="deleteNotification(event)" title="Delete">
+                            🗑️
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Unread Notification 4 - Decision (Approved) -->
+            <div class="notification-item unread" data-type="decision" data-read="false">
+                <div class="notification-header">
+                    <div class="notification-icon-wrapper">
+                        <div class="notification-icon success">✅</div>
+                        <div class="notification-content">
+                            <div class="notification-title">✅ No-Show Excuse Approved</div>
+                            <div class="notification-message">
+                                Your reason for missing the appointment has been reviewed and accepted. The 6-month restriction has been removed. You can now book a new appointment.
+                            </div>
+                            <div class="notification-meta">
+                                <div class="notification-time">
+                                    <span>🕐</span> 2 days ago
+                                </div>
+                                <span class="notification-type type-decision">Decision</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="notification-actions">
+                        <button class="action-btn delete" onclick="deleteNotification(event)" title="Delete">
+                            🗑️
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Unread Notification 5 - Attendance Confirmation -->
+            <div class="notification-item unread" data-type="confirmation" data-read="false">
+                <div class="notification-header">
+                    <div class="notification-icon-wrapper">
+                        <div class="notification-icon info">❓</div>
+                        <div class="notification-content">
+                            <div class="notification-title">❓ Did You Attend Your Appointment?</div>
+                            <div class="notification-message">
+                                We noticed you had a dental appointment yesterday. Please confirm if you attended. If you couldn't make it, please let us know why.
+                            </div>
+                            <div class="notification-meta">
+                                <div class="notification-time">
+                                    <span>🕐</span> 3 days ago
+                                </div>
+                                <span class="notification-type type-confirmation">Confirmation</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="notification-actions">
+                        <button class="action-btn delete" onclick="deleteNotification(event)" title="Delete">
+                            🗑️
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Read Notification 1 - Decision (Denied) -->
+            <div class="notification-item read" data-type="decision" data-read="true">
+                <div class="notification-header">
+                    <div class="notification-icon-wrapper">
+                        <div class="notification-icon error">❌</div>
+                        <div class="notification-content">
+                            <div class="notification-title">❌ No-Show Excuse Not Accepted</div>
+                            <div class="notification-message">
+                                Your reason for missing the appointment has been reviewed. The 6-month restriction will remain in effect until August 15, 2026. Please ensure you attend future appointments.
+                            </div>
+                            <div class="notification-meta">
+                                <div class="notification-time">
+                                    <span>🕐</span> 5 days ago
+                                </div>
+                                <span class="notification-type type-decision">Decision</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="notification-actions">
+                        <button class="action-btn delete" onclick="deleteNotification(event)" title="Delete">
+                            🗑️
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Read Notification 2 - Reminder -->
+            <div class="notification-item read" data-type="reminder" data-read="true">
+                <div class="notification-header">
+                    <div class="notification-icon-wrapper">
+                        <div class="notification-icon warning">⏰</div>
+                        <div class="notification-content">
+                            <div class="notification-title">⏰ Appointment in 2 Days</div>
+                            <div class="notification-message">
+                                Your dental appointment is coming up! Don't forget: <strong>February 15, 2026 at 3:00 PM - 5:00 PM</strong>. You can cancel up to 48 hours before if needed.
+                            </div>
+                            <div class="notification-meta">
+                                <div class="notification-time">
+                                    <span>🕐</span> 1 week ago
+                                </div>
+                                <span class="notification-type type-reminder">Reminder</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="notification-actions">
+                        <button class="action-btn delete" onclick="deleteNotification(event)" title="Delete">
+                            🗑️
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Read Notification 3 - System -->
+            <div class="notification-item read" data-type="system" data-read="true">
+                <div class="notification-header">
+                    <div class="notification-icon-wrapper">
+                        <div class="notification-icon info">ℹ️</div>
+                        <div class="notification-content">
+                            <div class="notification-title">ℹ️ Welcome to Dental Appointment System</div>
+                            <div class="notification-message">
+                                Thank you for registering! You can now book dental appointments, view your appointment history, and receive reminders. Get started by booking your first appointment.
+                            </div>
+                            <div class="notification-meta">
+                                <div class="notification-time">
+                                    <span>🕐</span> 2 weeks ago
+                                </div>
+                                <span class="notification-type type-system">System</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="notification-actions">
+                        <button class="action-btn delete" onclick="deleteNotification(event)" title="Delete">
+                            🗑️
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function filterNotifications(type, element) {
+            // Update active tab
+            document.querySelectorAll('.filter-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            element.classList.add('active');
+
+            // Filter notifications
+            const notifications = document.querySelectorAll('.notification-item');
+            
+            notifications.forEach(notification => {
+                if (type === 'all') {
+                    notification.style.display = 'block';
+                } else if (type === 'unread') {
+                    notification.style.display = notification.dataset.read === 'false' ? 'block' : 'none';
+                } else {
+                    notification.style.display = notification.dataset.type === type ? 'block' : 'none';
+                }
+            });
+
+            // Check if any notifications are visible
+            const visibleNotifications = Array.from(notifications).filter(n => n.style.display !== 'none');
+            
+            if (visibleNotifications.length === 0) {
+                showEmptyState(type);
+            } else {
+                hideEmptyState();
+            }
+        }
+
+        function showEmptyState(type) {
+            const listContainer = document.getElementById('notificationsList');
+            
+            // Remove existing empty state if any
+            const existingEmpty = document.querySelector('.empty-state');
+            if (existingEmpty) existingEmpty.remove();
+            
+            const emptyState = document.createElement('div');
+            emptyState.className = 'empty-state';
+            
+            let message = 'No notifications';
+            if (type === 'unread') message = 'No unread notifications';
+            else if (type !== 'all') message = `No ${type} notifications`;
+            
+            emptyState.innerHTML = `
+                <div class="empty-icon">📭</div>
+                <h3>${message}</h3>
+                <p>You're all caught up!</p>
+            `;
+            
+            listContainer.appendChild(emptyState);
+        }
+
+        function hideEmptyState() {
+            const emptyState = document.querySelector('.empty-state');
+            if (emptyState) emptyState.remove();
+        }
+
+        function markAllAsRead() {
+            const unreadNotifications = document.querySelectorAll('.notification-item.unread');
+            
+            if (unreadNotifications.length === 0) {
+                alert('All notifications are already marked as read!');
+                return;
+            }
+
+            if (confirm(`Mark ${unreadNotifications.length} notification(s) as read?`)) {
+                unreadNotifications.forEach(notification => {
+                    notification.classList.remove('unread');
+                    notification.classList.add('read');
+                    notification.dataset.read = 'true';
+                });
+
+                // Update unread count
+                document.getElementById('unreadCount').textContent = '0';
+                
+                alert('All notifications marked as read!');
+                
+                // In real app: AJAX call to update database
+                /*
+                fetch('mark-all-read.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        console.log('Marked all as read');
+                    }
+                });
+                */
+            }
+        }
+
+        function deleteAll() {
+            const allNotifications = document.querySelectorAll('.notification-item');
+            
+            if (allNotifications.length === 0) {
+                alert('No notifications to delete!');
+                return;
+            }
+
+            if (confirm(`Delete all ${allNotifications.length} notification(s)? This action cannot be undone.`)) {
+                allNotifications.forEach(notification => {
+                    notification.remove();
+                });
+
+                // Update count
+                document.getElementById('unreadCount').textContent = '0';
+                
+                // Show empty state
+                showEmptyState('all');
+                
+                alert('All notifications deleted!');
+                
+                // In real app: AJAX call to delete from database
+            }
+        }
+
+        function deleteNotification(event) {
+            event.stopPropagation(); // Prevent notification click
+            
+            const notification = event.target.closest('.notification-item');
+            
+            if (confirm('Delete this notification?')) {
+                // Update count if it's unread
+                if (notification.dataset.read === 'false') {
+                    const countElement = document.getElementById('unreadCount');
+                    const currentCount = parseInt(countElement.textContent);
+                    countElement.textContent = Math.max(0, currentCount - 1);
+                }
+                
+                notification.remove();
+                
+                // Check if list is empty
+                const remainingNotifications = document.querySelectorAll('.notification-item');
+                if (remainingNotifications.length === 0) {
+                    showEmptyState('all');
+                }
+                
+                // In real app: AJAX call to delete from database
+            }
+        }
+
+        // Mark as read when clicked
+        document.querySelectorAll('.notification-item').forEach(notification => {
+            notification.addEventListener('click', function(e) {
+                // Don't mark as read if clicking delete button
+                if (e.target.closest('.action-btn')) return;
+                
+                if (this.classList.contains('unread')) {
+                    this.classList.remove('unread');
+                    this.classList.add('read');
+                    this.dataset.read = 'true';
+                    
+                    // Update count
+                    const countElement = document.getElementById('unreadCount');
+                    const currentCount = parseInt(countElement.textContent);
+                    countElement.textContent = Math.max(0, currentCount - 1);
+                    
+                    // In real app: AJAX call to mark as read
+                }
+            });
+        });
+
+        function goBack() {
+            alert('Returning to dashboard...');
+            window.location.href = '../student/index.html';
+        }
+    </script>
+</body>
+</html>
