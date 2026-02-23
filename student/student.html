@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmileCare — Student Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="student.css">
+  </head>
+  <body>
+    <!-- MOBILE HEADER -->
+    <div class="mobile-header">
+      <button class="hamburger" onclick="toggleSidebar()">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+      <div class="mobile-logo">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2C9.5 2 7 3.5 6 6c-1.5 3.5-.5 6 .5 9 .7 2.2 1.2 4 1.5 5.5.2 1 1 1.5 1.8 1.5s1.3-.8 1.5-1.5c.4-1.5.7-3.2.7-3.2s.3 1.7.7 3.2c.2.7.7 1.5 1.5 1.5s1.6-.5 1.8-1.5c.3-1.5.8-3.3 1.5-5.5 1-3 2-5.5.5-9-1-2.5-3.5-4-6-4z"/></svg>
+        <span>SmileCare</span>
+      </div>
+      <div style="width:36px"></div>
+    </div>
+    <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+    <!-- SIDEBAR -->
+    <div class="layout">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-logo">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8"><path d="M12 2C9.5 2 7 3.5 6 6c-1.5 3.5-.5 6 .5 9 .7 2.2 1.2 4 1.5 5.5.2 1 1 1.5 1.8 1.5s1.3-.8 1.5-1.5c.4-1.5.7-3.2.7-3.2s.3 1.7.7 3.2c.2.7.7 1.5 1.5 1.5s1.6-.5 1.8-1.5c.3-1.5.8-3.3 1.5-5.5 1-3 2-5.5.5-9-1-2.5-3.5-4-6-4z"/></svg>
+        <span>SmileCare</span>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-label">Menu</div>
+        <button class="nav-item active" onclick="showSection('dashboard',this)">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+          Dashboard
+        </button>
+        <button class="nav-item" onclick="showSection('book',this)">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          Book Appointment
+        </button>
+        <button class="nav-item" onclick="showSection('history',this)">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          History
+        </button>
+      </div>
+
+      <div class="sidebar-footer">
+        <div class="user-card">
+          <div class="user-avatar">JD</div>
+          <div class="user-info">
+            <div class="name">Juan Dela Cruz</div>
+            <div class="sid">2021-00123</div>
+          </div>
+        </div>
+        <button class="logout-btn" onclick="location.href='../login/login.html'">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          Sign Out
+        </button>
+      </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main">
+
+      <!-- ══════ SECTION: DASHBOARD ══════ -->
+      <div id="sec-dashboard">
+        <div class="topbar">
+          <div class="greeting">
+            <h1>Good afternoon, Juan!</h1>
+            <p>Here's your dental appointment overview</p>
+          </div>
+          <div class="credits-badge">
+            <div class="credits-ring">
+              <svg width="48" height="48" viewBox="0 0 48 48">
+                <circle class="ring-bg" cx="24" cy="24" r="20"/>
+                <circle class="ring-fill" cx="24" cy="24" r="20"
+                  stroke-dasharray="125.66"
+                  stroke-dashoffset="41.89"/>
+              </svg>
+              <div class="credits-text">2/3</div>
+            </div>
+            <div class="credits-info">
+              <div class="credits-label">Semester Credits</div>
+              <div class="credits-value">2 of 3 remaining</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Notifications -->
+        <div class="notification info">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          <span class="notif-text"><strong>Reminder:</strong> You have an appointment today at 4:30 PM — Cleaning</span>
+        </div>
+
+        <div class="notification post">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          <span class="notif-text">Did you attend your appointment on <strong>Feb 18</strong>? Please confirm.</span>
+          <button class="notif-action" onclick="openModal('post-appt-modal')">Respond</button>
+        </div>
+
+        <div class="grid">
+          <!-- Upcoming Appointments -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                Upcoming Appointments
+              </div>
+              <span class="card-badge">2 booked</span>
+            </div>
+            <div class="appointment-list">
+              <!-- Appointment 1: today, locked -->
+              <div class="appt-card">
+                <div class="appt-date-box">
+                  <span class="day">23</span>
+                  <span class="month">Feb</span>
+                </div>
+                <div class="appt-details">
+                  <div class="appt-purpose">Cleaning</div>
+                  <div class="appt-meta">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    4:30 PM · Today
+                  </div>
+                </div>
+                <span class="appt-status locked">🔒 Locked</span>
+                <div class="appt-actions">
+                  <button class="appt-action-btn disabled" title="Cannot reschedule (within 48hrs)">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+                  </button>
+                  <button class="appt-action-btn danger disabled" title="Cannot cancel (within 48hrs)">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                  </button>
+                  <button class="appt-action-btn" title="View Confirmation Slip" onclick="openModal('slip-modal')">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                  </button>
+                </div>
+              </div>
+              <!-- Appointment 2: future, editable -->
+              <div class="appt-card">
+                <div class="appt-date-box" style="background:var(--accent)">
+                  <span class="day">27</span>
+                  <span class="month">Feb</span>
+                </div>
+                <div class="appt-details">
+                  <div class="appt-purpose">Tooth Extraction</div>
+                  <div class="appt-meta">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    5:00 PM · Thursday
+                  </div>
+                </div>
+                <span class="appt-status confirmed">Confirmed</span>
+                <div class="appt-actions">
+                  <button class="appt-action-btn" title="Reschedule" onclick="openModal('reschedule-modal')">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+                  </button>
+                  <button class="appt-action-btn danger" title="Cancel" onclick="openModal('cancel-modal')">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Stats -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                Quick Overview
+              </div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:12px">
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;background:var(--bg);border-radius:10px">
+                <div>
+                  <div style="font-size:.75rem;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:.04em">Total Booked</div>
+                  <div style="font-size:1.3rem;font-weight:800;color:var(--text);margin-top:2px">3</div>
+                </div>
+                <div style="width:40px;height:40px;border-radius:10px;background:var(--primary-light);display:flex;align-items:center;justify-content:center">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/></svg>
+                </div>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;background:var(--bg);border-radius:10px">
+                <div>
+                  <div style="font-size:.75rem;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:.04em">Attended</div>
+                  <div style="font-size:1.3rem;font-weight:800;color:var(--success);margin-top:2px">1</div>
+                </div>
+                <div style="width:40px;height:40px;border-radius:10px;background:var(--success-bg);display:flex;align-items:center;justify-content:center">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+                </div>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;background:var(--bg);border-radius:10px">
+                <div>
+                  <div style="font-size:.75rem;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:.04em">Credits Left</div>
+                  <div style="font-size:1.3rem;font-weight:800;color:var(--accent);margin-top:2px">2/3</div>
+                </div>
+                <div style="width:40px;height:40px;border-radius:10px;background:var(--accent-light);display:flex;align-items:center;justify-content:center">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                </div>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;background:var(--bg);border-radius:10px">
+                <div>
+                  <div style="font-size:.75rem;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:.04em">Next Appointment</div>
+                  <div style="font-size:.92rem;font-weight:700;color:var(--text);margin-top:2px">Today · 4:30 PM</div>
+                </div>
+                <div style="width:40px;height:40px;border-radius:10px;background:#f0e6ff;display:flex;align-items:center;justify-content:center">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6b21a8" stroke-width="2" stroke-linecap="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════ SECTION: BOOK APPOINTMENT ══════ -->
+      <div id="sec-book" style="display:none">
+        <div class="topbar">
+          <div class="greeting">
+            <h1>Book an Appointment</h1>
+            <p>Select a date, time, and purpose</p>
+          </div>
+          <div class="credits-badge">
+            <div class="credits-ring">
+              <svg width="48" height="48" viewBox="0 0 48 48">
+                <circle class="ring-bg" cx="24" cy="24" r="20"/>
+                <circle class="ring-fill" cx="24" cy="24" r="20" stroke-dasharray="125.66" stroke-dashoffset="41.89"/>
+              </svg>
+              <div class="credits-text">2/3</div>
+            </div>
+            <div class="credits-info">
+              <div class="credits-label">Semester Credits</div>
+              <div class="credits-value">2 of 3 remaining</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid">
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                Select a Date
+              </div>
+            </div>
+            <div class="calendar-nav">
+              <button class="cal-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg></button>
+              <span class="month">February 2026</span>
+              <button class="cal-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg></button>
+            </div>
+            <div class="cal-grid">
+              <div class="cal-day-label">Sun</div><div class="cal-day-label">Mon</div><div class="cal-day-label">Tue</div><div class="cal-day-label">Wed</div><div class="cal-day-label">Thu</div><div class="cal-day-label">Fri</div><div class="cal-day-label">Sat</div>
+              <div class="cal-day other-month">1</div><div class="cal-day other-month">2</div><div class="cal-day">3</div><div class="cal-day">4</div><div class="cal-day">5</div><div class="cal-day">6</div><div class="cal-day">7</div>
+              <div class="cal-day">8</div><div class="cal-day">9</div><div class="cal-day">10</div><div class="cal-day">11</div><div class="cal-day">12</div><div class="cal-day">13</div><div class="cal-day">14</div>
+              <div class="cal-day">15</div><div class="cal-day">16</div><div class="cal-day">17</div><div class="cal-day">18</div><div class="cal-day">19</div><div class="cal-day">20</div><div class="cal-day">21</div>
+              <div class="cal-day">22</div><div class="cal-day today">23</div><div class="cal-day available" onclick="selectDate(this,'Tue, Feb 24')">24</div><div class="cal-day available" onclick="selectDate(this,'Wed, Feb 25')">25</div><div class="cal-day full">26</div><div class="cal-day">27</div><div class="cal-day">28</div>
+            </div>
+            <div class="cal-legend">
+              <div class="cal-legend-item"><div class="cal-legend-dot avail"></div>Available</div>
+              <div class="cal-legend-item"><div class="cal-legend-dot full-dot"></div>Full</div>
+              <div class="cal-legend-item"><div class="cal-legend-dot today-dot"></div>Today</div>
+            </div>
+          </div>
+
+          <!-- Booking Details Panel -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                Booking Details
+              </div>
+            </div>
+
+            <div id="booking-placeholder">
+              <div class="empty-state">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><circle cx="12" cy="15" r="2"/></svg>
+                <p>Select an available date on the calendar to start booking</p>
+              </div>
+            </div>
+
+            <div class="booking-panel" id="booking-panel">
+              <div class="booking-date-label" id="selected-date-label">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/></svg>
+                Tue, Feb 24
+              </div>
+
+              <div class="booking-section-title">Select Time</div>
+              <div class="time-slots">
+                <div class="time-slot" onclick="selectSlot(this)">4:00 PM</div>
+                <div class="time-slot" onclick="selectSlot(this)">4:30 PM</div>
+                <div class="time-slot taken">5:00 PM</div>
+              </div>
+
+              <div class="booking-section-title">Purpose</div>
+              <div class="purpose-options">
+                <div class="purpose-opt" onclick="selectPurpose(this)">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2C9.5 2 7 3.5 6 6c-1.5 3.5-.5 6 .5 9 .7 2.2 1.2 4 1.5 5.5.2 1 1 1.5 1.8 1.5s1.3-.8 1.5-1.5c.4-1.5.7-3.2.7-3.2s.3 1.7.7 3.2c.2.7.7 1.5 1.5 1.5s1.6-.5 1.8-1.5c.3-1.5.8-3.3 1.5-5.5 1-3 2-5.5.5-9-1-2.5-3.5-4-6-4z"/></svg>
+                  Pasta
+                </div>
+                <div class="purpose-opt" onclick="selectPurpose(this)">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+                  Cleaning
+                </div>
+                <div class="purpose-opt" onclick="selectPurpose(this)">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                  Tooth Extraction
+                </div>
+              </div>
+
+              <button class="book-btn" onclick="openModal('confirm-modal')">Confirm Booking</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════ SECTION: HISTORY ══════ -->
+      <div id="sec-history" style="display:none">
+        <div class="topbar">
+          <div class="greeting">
+            <h1>Appointment History</h1>
+            <p>View your past appointments and responses</p>
+          </div>
+        </div>
+        <div class="card full-width" style="overflow-x:auto">
+          <div class="card-header">
+            <div class="card-title">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              Past Appointments
+            </div>
+          </div>
+          <table class="history-table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Purpose</th>
+                <th>Response</th>
+                <th>Comment</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Feb 18, 2026</strong></td>
+                <td>4:00 PM</td>
+                <td>Cleaning</td>
+                <td><span class="response-badge yes">✅ Yes</span></td>
+                <td style="color:var(--text-muted);font-style:italic">"It was good"</td>
+              </tr>
+              <tr>
+                <td><strong>Jan 28, 2026</strong></td>
+                <td>4:30 PM</td>
+                <td>Pasta</td>
+                <td><span class="response-badge auto">✅ Auto-Yes</span></td>
+                <td style="color:var(--text-muted);font-style:italic">No comment provided</td>
+              </tr>
+              <tr>
+                <td><strong>Feb 23, 2026</strong></td>
+                <td>4:30 PM</td>
+                <td>Cleaning</td>
+                <td><span class="response-badge pending-resp">⏳ Pending</span></td>
+                <td style="color:var(--text-muted)">—</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </main>
+    </div>
+
+    <!-- ═══════ MODALS ═══════ -->
+
+    <!-- Confirmation Slip Modal -->
+    <div class="modal-overlay" id="slip-modal">
+      <div class="modal">
+        <div class="modal-icon success">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        </div>
+        <h3>Confirmation Slip</h3>
+        <p class="modal-sub">Present this to the dentist upon arrival</p>
+        <div class="slip">
+          <div class="slip-header">
+            <h4>🦷 SmileCare Dental</h4>
+            <p>University Dental Clinic</p>
+          </div>
+          <div class="slip-row"><span class="slip-label">Student</span><span class="slip-value">Juan Dela Cruz</span></div>
+          <div class="slip-row"><span class="slip-label">Student ID</span><span class="slip-value">2021-00123</span></div>
+          <div class="slip-row"><span class="slip-label">Date</span><span class="slip-value">Feb 23, 2026</span></div>
+          <div class="slip-row"><span class="slip-label">Time</span><span class="slip-value">4:30 PM</span></div>
+          <div class="slip-row"><span class="slip-label">Purpose</span><span class="slip-value">Cleaning</span></div>
+          <div class="slip-row"><span class="slip-label">Credits Used</span><span class="slip-value">1 / 3</span></div>
+        </div>
+        <div class="modal-actions">
+          <button class="modal-btn secondary" onclick="closeModal('slip-modal')">Close</button>
+          <button class="modal-btn primary" onclick="closeModal('slip-modal')">📸 Screenshot</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Booking Confirm Modal -->
+    <div class="modal-overlay" id="confirm-modal">
+      <div class="modal">
+        <div class="modal-icon success">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <h3>Confirm Your Booking</h3>
+        <p class="modal-sub">Please review before confirming</p>
+        <div class="slip">
+          <div class="slip-row"><span class="slip-label">Date</span><span class="slip-value" id="confirm-date">Tue, Feb 24</span></div>
+          <div class="slip-row"><span class="slip-label">Time</span><span class="slip-value" id="confirm-time">4:00 PM</span></div>
+          <div class="slip-row"><span class="slip-label">Purpose</span><span class="slip-value" id="confirm-purpose">Cleaning</span></div>
+          <div class="slip-row"><span class="slip-label">Credits After</span><span class="slip-value">1 / 3</span></div>
+        </div>
+        <div class="modal-actions">
+          <button class="modal-btn secondary" onclick="closeModal('confirm-modal')">Go Back</button>
+          <button class="modal-btn primary" onclick="closeModal('confirm-modal');openModal('success-modal')">Confirm Booking</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div class="modal-overlay" id="success-modal">
+      <div class="modal" style="text-align:center">
+        <div class="modal-icon success">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <h3>Booking Confirmed!</h3>
+        <p class="modal-sub">Your appointment has been booked. A confirmation slip will be sent 48 hours before your appointment.</p>
+        <button class="modal-btn primary" style="width:100%" onclick="closeModal('success-modal')">Done</button>
+      </div>
+    </div>
+
+    <!-- Post-Appointment Modal -->
+    <div class="modal-overlay" id="post-appt-modal">
+      <div class="modal">
+        <div class="modal-icon purple">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        </div>
+        <h3>Post-Appointment</h3>
+        <p class="modal-sub">Did you attend your appointment on <strong>Feb 18, 2026 at 4:00 PM</strong>?</p>
+        <div class="radio-group">
+          <div class="radio-opt" onclick="selectRadio(this,'yes')">✅ Yes</div>
+          <div class="radio-opt" onclick="selectRadio(this,'no')">❌ No</div>
+        </div>
+        <label style="font-size:.78rem;font-weight:600;text-transform:uppercase;letter-spacing:.04em;color:var(--text-muted);display:block;margin-bottom:6px">Comment (optional)</label>
+        <textarea placeholder="e.g. It was good"></textarea>
+        <div class="modal-actions">
+          <button class="modal-btn secondary" onclick="closeModal('post-appt-modal')">Later</button>
+          <button class="modal-btn purple" onclick="closeModal('post-appt-modal')">Submit</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Reschedule Modal -->
+    <div class="modal-overlay" id="reschedule-modal">
+      <div class="modal">
+        <div class="modal-icon" style="background:var(--accent-light);color:var(--accent)">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+        </div>
+        <h3>Reschedule Appointment</h3>
+        <p class="modal-sub">Current: <strong>Feb 27, 2026 · 5:00 PM</strong></p>
+
+        <div style="margin-bottom:16px">
+          <label class="reschedule-label">Select New Date</label>
+          <input type="date" id="reschedule-date" class="reschedule-input" min="2026-02-25">
+        </div>
+
+        <div style="margin-bottom:4px">
+          <label class="reschedule-label">Select New Purpose</label>
+          <div class="purpose-options" id="reschedule-purposes">
+            <div class="purpose-opt" onclick="selectReschedulePurpose(this)">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2C9.5 2 7 3.5 6 6c-1.5 3.5-.5 6 .5 9 .7 2.2 1.2 4 1.5 5.5.2 1 1 1.5 1.8 1.5s1.3-.8 1.5-1.5c.4-1.5.7-3.2.7-3.2s.3 1.7.7 3.2c.2.7.7 1.5 1.5 1.5s1.6-.5 1.8-1.5c.3-1.5.8-3.3 1.5-5.5 1-3 2-5.5.5-9-1-2.5-3.5-4-6-4z"/></svg>
+              Pasta
+            </div>
+            <div class="purpose-opt" onclick="selectReschedulePurpose(this)">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+              Cleaning
+            </div>
+            <div class="purpose-opt" onclick="selectReschedulePurpose(this)">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              Tooth Extraction
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-bottom:4px">
+          <label class="reschedule-label">Select New Time</label>
+          <div class="time-slots" id="reschedule-slots">
+            <div class="time-slot" onclick="selectRescheduleSlot(this)">4:00 PM</div>
+            <div class="time-slot" onclick="selectRescheduleSlot(this)">4:30 PM</div>
+            <div class="time-slot" onclick="selectRescheduleSlot(this)">5:00 PM</div>
+          </div>
+        </div>
+
+        <div class="modal-actions">
+          <button class="modal-btn secondary" onclick="closeModal('reschedule-modal')">Cancel</button>
+          <button class="modal-btn primary" onclick="confirmReschedule()">Confirm Reschedule</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cancel Modal -->
+    <div class="modal-overlay" id="cancel-modal">
+      <div class="modal">
+        <div class="modal-icon" style="background:var(--error-bg);color:var(--error)">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+        </div>
+        <h3>Cancel Appointment?</h3>
+        <p class="modal-sub">Are you sure you want to cancel your appointment on <strong>Feb 27, 2026 at 5:00 PM</strong>?<br><br><span style="color:var(--error);font-weight:600">Note: Your credit will NOT be restored.</span></p>
+        <div class="modal-actions">
+          <button class="modal-btn secondary" onclick="closeModal('cancel-modal')">Keep It</button>
+          <button class="modal-btn primary" style="background:linear-gradient(135deg,var(--error),#922b21);box-shadow:0 4px 12px rgba(192,57,43,.25)" onclick="closeModal('cancel-modal')">Yes, Cancel</button>
+        </div>
+      </div>
+    </div>
+    <script src="student.js"></script>
+  </body>
+</html>

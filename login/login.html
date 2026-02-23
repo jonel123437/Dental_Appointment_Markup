@@ -1,108 +1,194 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Dental Appointment System</title>
-    <link rel="stylesheet" href="login.css">
-</head>
-<body>
-    <div class="login-container">
-        <!-- Left Side - Branding -->
-        <div class="login-brand">
-            <div class="brand-logo">🦷</div>
-            <h1>Dental Appointment System</h1>
-            <p>Easy, fast, and secure dental appointment booking for students</p>
+    <title>SmileCare — Dental Appointment System</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="auth.css">
+  </head>
+  <body>
+    <div class="page">
+      <!-- LEFT HERO -->
+      <div class="hero">
+        <div class="hero-shape s1"></div>
+        <div class="hero-shape s2"></div>
+        <div class="hero-shape s3"></div>
 
-            <div class="brand-features">
-                <div class="feature-item">
-                    <div class="feature-icon">📅</div>
-                    <div>Book appointments anytime, anywhere</div>
-                </div>
-                <div class="feature-item">
-                    <div class="feature-icon">🔔</div>
-                    <div>Get reminders for your appointments</div>
-                </div>
-                <div class="feature-item">
-                    <div class="feature-icon">✨</div>
-                    <div>View your dental care history</div>
-                </div>
-            </div>
+        <div class="tooth-icon">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2C9.5 2 7 3.5 6 6c-1.5 3.5-.5 6 .5 9 .7 2.2 1.2 4 1.5 5.5.2 1 1 1.5 1.8 1.5s1.3-.8 1.5-1.5c.4-1.5.7-3.2.7-3.2s.3 1.7.7 3.2c.2.7.7 1.5 1.5 1.5s1.6-.5 1.8-1.5c.3-1.5.8-3.3 1.5-5.5 1-3 2-5.5.5-9-1-2.5-3.5-4-6-4z"/>
+          </svg>
+          <span>SmileCare</span>
         </div>
 
-        <!-- Right Side - Login Form -->
-        <div class="login-form-container">
+        <div class="hero-content">
+          <div class="hero-badge">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+            Tue · Wed · Thu — 4:00 PM to 5:00 PM
+          </div>
+          <h1>Your campus dental care, simplified.</h1>
+          <p>Book your appointment in seconds. 3 slots per semester — easy scheduling, timely reminders, and a healthier smile.</p>
+        </div>
+      </div>
+
+      <!-- RIGHT FORM -->
+      <div class="form-panel">
+        <div class="form-wrapper">
+
+          <!-- TABS -->
+          <div class="tabs">
+            <button class="tab-btn active" data-tab="login" onclick="switchTab('login')">Sign In</button>
+            <button class="tab-btn" data-tab="register" onclick="switchTab('register')">Register</button>
+          </div>
+
+          <!-- ============ LOGIN ============ -->
+          <div id="login-form">
             <div class="form-header">
-                <h2>Welcome Back!</h2>
-                <p>Enter your credentials to access your account</p>
+              <h2>Welcome back</h2>
+              <p>Sign in to manage your dental appointments</p>
             </div>
 
-            <!-- Role Selection -->
-            <div class="role-tabs">
-                <div class="role-tab active" onclick="selectRole('student', this)">
-                    👨‍🎓 Student
+            <form class="form-body" onsubmit="handleLogin(event)" novalidate>
+              <!-- Role Selector -->
+              <div class="field">
+                <label>I am a</label>
+                <div class="role-selector">
+                  <button type="button" class="role-btn selected" data-role="student" onclick="selectRole(this)">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+                    Student
+                  </button>
+                  <button type="button" class="role-btn" data-role="admin" onclick="selectRole(this)">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 15v2m-6 4h12a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2zm10-10V7a4 4 0 0 0-8 0v4"/></svg>
+                    Admin
+                  </button>
                 </div>
-                <div class="role-tab" onclick="selectRole('admin', this)">
-                    👨‍💼 Admin
-                </div>
-            </div>
+              </div>
 
-            <!-- Login Form -->
-            <form id="loginForm" onsubmit="handleLogin(event)">
-                <div class="form-group">
-                    <label for="userId" id="userIdLabel">Student ID</label>
-                    <div class="input-wrapper">
-                        <span class="input-icon" id="userIdIcon">🆔</span>
-                        <input 
-                            type="text" 
-                            id="userId" 
-                            class="form-control" 
-                            placeholder="Enter your Student ID (e.g., STU-2024-001)" 
-                            required
-                        >
-                    </div>
+              <!-- Student Login Fields -->
+              <div id="student-login-fields">
+                <div class="field" style="margin-bottom:18px">
+                  <label for="login-sid">Student ID</label>
+                  <input type="text" id="login-sid" placeholder="e.g. 2021-00123">
                 </div>
-
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <div class="input-wrapper">
-                        <span class="input-icon">🔒</span>
-                        <input 
-                            type="password" 
-                            id="password" 
-                            class="form-control" 
-                            placeholder="Enter your password" 
-                            required
-                        >
-                        <button type="button" class="password-toggle" onclick="togglePassword()">
-                            👁️
-                        </button>
-                    </div>
+                <div class="field">
+                  <label for="login-pw">Password</label>
+                  <div class="pw-wrap">
+                    <input type="password" id="login-pw" placeholder="Enter your password">
+                    <button type="button" class="pw-toggle" onclick="togglePw(this)" aria-label="Toggle password visibility">
+                      <svg class="eye-open" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg>
+                      <svg class="eye-closed hidden" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                    </button>
+                  </div>
                 </div>
+              </div>
 
-                <div class="form-options">
-                    <label class="remember-me">
-                        <input type="checkbox" id="rememberMe">
-                        <span>Remember me</span>
-                    </label>
-                    <a href="#" class="forgot-password">Forgot Password?</a>
+              <!-- Admin Login Fields -->
+              <div id="admin-login-fields" class="hidden">
+                <div class="field" style="margin-bottom:18px">
+                  <label for="login-email">Email Address</label>
+                  <input type="email" id="login-email" placeholder="admin@smilecare.com">
                 </div>
+                <div class="field">
+                  <label for="login-admin-pw">Password</label>
+                  <div class="pw-wrap">
+                    <input type="password" id="login-admin-pw" placeholder="Enter your password">
+                    <button type="button" class="pw-toggle" onclick="togglePw(this)" aria-label="Toggle password visibility">
+                      <svg class="eye-open" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg>
+                      <svg class="eye-closed hidden" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
 
-                <button type="submit" class="btn-login">
-                    Login
-                </button>
+              <button type="submit" class="submit-btn" id="login-btn">Sign In</button>
             </form>
 
-            <div class="divider">
-                <span>Don't have an account?</span>
+            <div class="form-footer">
+              Don't have an account? <a href="#" onclick="switchTab('register');return false">Register here</a>
+            </div>
+          </div>
+
+          <!-- ============ REGISTER ============ -->
+          <div id="register-form" class="hidden">
+            <div class="form-header">
+              <h2>Create account</h2>
+              <p>Register to start booking dental appointments</p>
             </div>
 
-            <div class="register-link">
-                <a href="../register/register.html">Create a new account</a>
+            <form class="form-body" onsubmit="handleRegister(event)" novalidate>
+              <div class="row">
+                <div class="field">
+                  <label for="reg-fname">First Name</label>
+                  <input type="text" id="reg-fname" placeholder="Juan">
+                  <span class="error-msg" id="err-fname">First name is required</span>
+                </div>
+                <div class="field">
+                  <label for="reg-lname">Last Name</label>
+                  <input type="text" id="reg-lname" placeholder="Dela Cruz">
+                  <span class="error-msg" id="err-lname">Last name is required</span>
+                </div>
+              </div>
+
+              <div class="field">
+                <label for="reg-sid">Student ID</label>
+                <input type="text" id="reg-sid" placeholder="e.g. 2021-00123">
+                <span class="error-msg" id="err-sid">Student ID is required</span>
+              </div>
+
+              <div class="field">
+                <label for="reg-email">Email Address</label>
+                <input type="email" id="reg-email" placeholder="juan@university.edu">
+                <span class="error-msg" id="err-email">Valid email is required</span>
+              </div>
+
+              <div class="field">
+                <label for="reg-pw">Password</label>
+                <div class="pw-wrap">
+                  <input type="password" id="reg-pw" placeholder="Min 6 characters">
+                  <button type="button" class="pw-toggle" onclick="togglePw(this)" aria-label="Toggle password visibility">
+                    <svg class="eye-open" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg>
+                    <svg class="eye-closed hidden" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                  </button>
+                </div>
+                <span class="error-msg" id="err-pw">Password must be at least 6 characters</span>
+              </div>
+
+              <div class="field">
+                <label for="reg-cpw">Confirm Password</label>
+                <div class="pw-wrap">
+                  <input type="password" id="reg-cpw" placeholder="Re-enter your password">
+                  <button type="button" class="pw-toggle" onclick="togglePw(this)" aria-label="Toggle password visibility">
+                    <svg class="eye-open" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg>
+                    <svg class="eye-closed hidden" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                  </button>
+                </div>
+                <span class="error-msg" id="err-cpw">Passwords do not match</span>
+              </div>
+
+              <button type="submit" class="submit-btn">Create Account</button>
+            </form>
+
+            <div class="form-footer">
+              Already have an account? <a href="#" onclick="switchTab('login');return false">Sign in</a>
             </div>
+          </div>
+
         </div>
+      </div>
+    </div>
+
+    <!-- SUCCESS OVERLAY -->
+    <div class="success-overlay" id="success-overlay">
+      <div class="success-card">
+        <div class="success-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#1a6b5a" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <h3 id="success-title">Welcome!</h3>
+        <p id="success-msg">You've successfully signed in.</p>
+        <button class="success-btn" onclick="closeSuccess()">Continue</button>
+      </div>
     </div>
     <script src="login.js"></script>
-    
-</body>
+  </body>
 </html>
