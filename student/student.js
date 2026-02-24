@@ -18,6 +18,9 @@ function loadStudentInfo() {
   const credits = student.credits ?? 3;
   const initials = student.fname[0] + student.lname[0];
 
+  const warning = document.getElementById('no-credits-warning');
+  if (warning) warning.style.display = credits <= 0 ? 'flex' : 'none';
+
   const hour = new Date().getHours();
   const greeting = hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening';
   document.querySelector('#sec-dashboard .greeting h1').textContent = `${greeting}, ${firstName}!`;
@@ -37,6 +40,7 @@ function loadStudentInfo() {
   const creditsLeftEl = document.querySelector('#sec-dashboard .card:nth-child(2) [style*="accent"]');
   if (creditsLeftEl) creditsLeftEl.textContent = `${credits}/3`;
 
+  loadPostAppointmentNotification();
   loadUpcomingAppointments();
   loadQuickOverview();
   loadReminderNotification();
@@ -113,12 +117,10 @@ function renderCalendar() {
     const isToday = date.getTime() === today.getTime();
     const isPast = date < today;
     const isBookable = BOOKABLE_DAYS.includes(dow);
+    const noCredits = (loggedInStudent.credits ?? 3) <= 0; // ← ADD
 
-    // Check how many bookings on this date (max 3)
     const bookingsOnDay = JSON.parse(localStorage.getItem(`day_${dateStr}`) || '[]');
     const isFull = bookingsOnDay.length >= 3;
-
-    // Check if student already booked this day
     const alreadyBooked = appointments.find(a => a.date === dateStr);
 
     const d = document.createElement('div');
@@ -126,7 +128,7 @@ function renderCalendar() {
 
     if (isToday) {
       d.className = 'cal-day today';
-    } else if (isPast || !isBookable) {
+    } else if (isPast || !isBookable || noCredits) { // ← ADD noCredits
       d.className = 'cal-day';
       d.style.opacity = '.35';
     } else if (alreadyBooked) {
@@ -138,7 +140,6 @@ function renderCalendar() {
     } else {
       d.className = 'cal-day available';
       d.onclick = () => selectDate(d, dateStr);
-      // Add slot dots (3 max, filled = booked)
       const dotsEl = document.createElement('div');
       dotsEl.className = 'slot-dots';
       for (let i = 0; i < 3; i++) {
@@ -240,32 +241,213 @@ document.querySelectorAll('.modal-overlay').forEach(o=>{
   });
 });
 
+// ─── Reschedule Calendar State ───
+let reschedMonth = new Date().getMonth();
+let reschedYear = new Date().getFullYear();
+let reschedSelectedDate = null;
+let reschedApptId = null;
+
+function openRescheduleModal(apptId) {
+  reschedApptId = apptId;
+  reschedSelectedDate = null;
+  reschedMonth = new Date().getMonth();
+  reschedYear = new Date().getFullYear();
+
+  const appointments = JSON.parse(localStorage.getItem(`appointments_${loggedInStudent.sid}`) || '[]');
+  const appt = appointments.find(a => a.id == apptId);
+  if (!appt) return;
+
+  const dateLabel = new Date(appt.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+  document.getElementById('reschedule-current-label').textContent = `${dateLabel} · ${appt.time}`;
+
+  // Reset UI
+  document.getElementById('resched-cal-section').style.display = 'block';      // ← ADD
+  document.getElementById('resched-date-label').style.display = 'none';
+  document.getElementById('resched-time-section').style.display = 'none';
+  document.querySelectorAll('#resched-slots .time-slot').forEach(s => s.classList.remove('selected', 'taken'));
+  document.querySelectorAll('#reschedule-purposes .purpose-opt').forEach(p => p.classList.remove('selected'));
+
+  // Pre-select current purpose
+  document.querySelectorAll('#reschedule-purposes .purpose-opt').forEach(p => {
+    if (p.textContent.trim() === appt.purpose) p.classList.add('selected');
+  });
+
+  renderReschedCalendar();
+  openModal('reschedule-modal');
+}
+
+function renderReschedCalendar() {
+  const firstDay = new Date(reschedYear, reschedMonth, 1).getDay();
+  const daysInMonth = new Date(reschedYear, reschedMonth + 1, 0).getDate();
+  const daysInPrev = new Date(reschedYear, reschedMonth, 0).getDate();
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  document.getElementById('resched-month-label').textContent =
+    `${MONTHS[reschedMonth]} ${reschedYear}`;
+
+  const appointments = JSON.parse(localStorage.getItem(`appointments_${loggedInStudent.sid}`) || '[]');
+  const grid = document.getElementById('resched-cal-body');
+  grid.innerHTML = '';
+
+  // Fillers
+  for (let i = 0; i < firstDay; i++) {
+    const d = document.createElement('div');
+    d.className = 'cal-day other-month';
+    d.textContent = daysInPrev - firstDay + 1 + i;
+    grid.appendChild(d);
+  }
+
+  for (let day = 1; day <= daysInMonth; day++) {
+    const date = new Date(reschedYear, reschedMonth, day);
+    const dow = date.getDay();
+    const dateStr = `${reschedYear}-${String(reschedMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+    const isPast = date < today;
+    const isBookable = BOOKABLE_DAYS.includes(dow);
+    const bookingsOnDay = JSON.parse(localStorage.getItem(`day_${dateStr}`) || '[]');
+
+    // Exclude the current appointment's slot from the full count
+    const currentAppt = appointments.find(a => a.id == reschedApptId);
+    const effectiveBookings = bookingsOnDay.filter(b =>
+      !(currentAppt && currentAppt.date === dateStr && b.sid === loggedInStudent.sid && b.time === currentAppt.time)
+    );
+    const isFull = effectiveBookings.length >= 3;
+
+    // Block days where student already has another appointment (not the one being rescheduled)
+    const otherAppt = appointments.find(a => a.date === dateStr && a.id != reschedApptId);
+
+    const d = document.createElement('div');
+    d.textContent = day;
+
+    if (isPast || !isBookable || otherAppt) {
+      d.className = 'cal-day';
+      d.style.opacity = '.35';
+    } else if (isFull) {
+      d.className = 'cal-day full';
+      d.title = 'No slots available';
+    } else {
+      d.className = 'cal-day available';
+      d.onclick = () => selectReschedDate(d, dateStr);
+      const dotsEl = document.createElement('div');
+      dotsEl.className = 'slot-dots';
+      for (let i = 0; i < 3; i++) {
+        const dot = document.createElement('span');
+        dot.className = 'slot-dot' + (i < effectiveBookings.length ? ' taken' : '');
+        dotsEl.appendChild(dot);
+      }
+      d.appendChild(dotsEl);
+    }
+
+    if (dateStr === reschedSelectedDate) d.classList.add('selected');
+    grid.appendChild(d);
+  }
+
+  // Trailing fillers
+  const total = grid.children.length;
+  const rem = total % 7 === 0 ? 0 : 7 - (total % 7);
+  for (let i = 1; i <= rem; i++) {
+    const d = document.createElement('div');
+    d.className = 'cal-day other-month';
+    d.textContent = i;
+    grid.appendChild(d);
+  }
+}
+
+function reschedPrevMonth() {
+  reschedMonth--;
+  if (reschedMonth < 0) { reschedMonth = 11; reschedYear--; }
+  renderReschedCalendar();
+}
+
+function reschedNextMonth() {
+  reschedMonth++;
+  if (reschedMonth > 11) { reschedMonth = 0; reschedYear++; }
+  renderReschedCalendar();
+}
+
+function selectReschedDate(el, dateStr) {
+  reschedSelectedDate = dateStr;
+  renderReschedCalendar();
+
+  document.getElementById('resched-cal-section').style.display = 'none';
+
+  const date = new Date(dateStr);
+  const label = date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+
+  const labelEl = document.getElementById('resched-date-label');
+  labelEl.innerHTML = `
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/></svg>
+    <span>${label}</span>
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+  `;
+  labelEl.style.display = 'inline-flex';
+
+  document.getElementById('resched-time-section').style.display = 'block';
+
+  // Mark taken slots (excluding current appt slot on same day)
+  const appointments = JSON.parse(localStorage.getItem(`appointments_${loggedInStudent.sid}`) || '[]');
+  const currentAppt = appointments.find(a => a.id == reschedApptId);
+  const bookingsOnDay = JSON.parse(localStorage.getItem(`day_${dateStr}`) || '[]');
+  const takenTimes = bookingsOnDay
+    .filter(b => !(currentAppt && currentAppt.date === dateStr && b.sid === loggedInStudent.sid && b.time === currentAppt.time))
+    .map(b => b.time);
+
+  document.querySelectorAll('#resched-slots .time-slot').forEach(slot => {
+    const isTaken = takenTimes.includes(slot.textContent.trim());
+    slot.classList.toggle('taken', isTaken);
+    slot.classList.remove('selected');
+    slot.onclick = isTaken ? null : () => selectReschedSlot(slot);
+  });
+}
+
+function selectReschedSlot(el) {
+  if (el.classList.contains('taken')) return;
+  document.querySelectorAll('#resched-slots .time-slot').forEach(s => s.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
 function selectReschedulePurpose(el) {
-  document.querySelectorAll('#reschedule-purposes .purpose-opt')
-    .forEach(p => p.classList.remove('selected'));
+  document.querySelectorAll('#reschedule-purposes .purpose-opt').forEach(p => p.classList.remove('selected'));
   el.classList.add('selected');
 }
 
 function confirmReschedule() {
-  const date = document.getElementById('reschedule-date').value;
-  const time = document.querySelector('#reschedule-slots .time-slot.selected');
-  const purpose = document.querySelector('#reschedule-purposes .purpose-opt.selected');
+  if (!reschedSelectedDate) { alert('Please select a new date.'); return; }
+  const timeEl = document.querySelector('#resched-slots .time-slot.selected');
+  if (!timeEl) { alert('Please select a new time.'); return; }
+  const purposeEl = document.querySelector('#reschedule-purposes .purpose-opt.selected');
+  if (!purposeEl) { alert('Please select a purpose.'); return; }
 
-  if (!date) {
-    alert('Please select a new date.');
-    return;
-  }
-  if (!time) {
-    alert('Please select a new time.');
-    return;
-  }
-  if (!purpose) {
-    alert('Please select a purpose.');
-    return;
-  }
+  const newDate = reschedSelectedDate;
+  const newTime = timeEl.textContent.trim();
+  const newPurpose = purposeEl.textContent.trim();
+
+  const key = `appointments_${loggedInStudent.sid}`;
+  const appointments = JSON.parse(localStorage.getItem(key) || '[]');
+  const appt = appointments.find(a => a.id == reschedApptId);
+  if (!appt) return;
+
+  // Remove old day slot
+  const oldDayKey = `day_${appt.date}`;
+  const oldDaySlots = JSON.parse(localStorage.getItem(oldDayKey) || '[]');
+  localStorage.setItem(oldDayKey, JSON.stringify(
+    oldDaySlots.filter(s => !(s.sid === loggedInStudent.sid && s.time === appt.time))
+  ));
+
+  // Add new day slot
+  const newDayKey = `day_${newDate}`;
+  const newDaySlots = JSON.parse(localStorage.getItem(newDayKey) || '[]');
+  newDaySlots.push({ sid: loggedInStudent.sid, time: newTime });
+  localStorage.setItem(newDayKey, JSON.stringify(newDaySlots));
+
+  // Update appointment
+  appt.date = newDate;
+  appt.time = newTime;
+  appt.purpose = newPurpose;
+  localStorage.setItem(key, JSON.stringify(appointments));
 
   closeModal('reschedule-modal');
-  // plug in your save logic here
+  loadStudentInfo();
 }
 
 function loadUpcomingAppointments() {
@@ -323,7 +505,7 @@ function loadUpcomingAppointments() {
       <div class="appt-actions">
         <button class="appt-action-btn ${isLocked ? 'disabled' : ''}"
           title="${isLocked ? 'Cannot reschedule (within 48hrs)' : 'Reschedule'}"
-          ${isLocked ? 'disabled' : `onclick="openModal('reschedule-modal')"`}>
+          ${isLocked ? 'disabled' : `onclick="openRescheduleModal('${appt.id}')"`}>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
         </button>
         <button class="appt-action-btn danger ${isLocked ? 'disabled' : ''}"
@@ -376,7 +558,6 @@ function confirmBooking() {
   if (idx !== -1 && students[idx].credits > 0) {
     students[idx].credits--;
     localStorage.setItem('students', JSON.stringify(students));
-    // Update session
     const updated = { ...JSON.parse(localStorage.getItem('loggedInStudent')), credits: students[idx].credits };
     localStorage.setItem('loggedInStudent', JSON.stringify(updated));
   }
@@ -389,6 +570,11 @@ function confirmBooking() {
 }
 
 function openConfirmModal() {
+  const credits = (getStudent().credits ?? 3);
+  if (credits <= 0) {
+    alert('You have no remaining credits and cannot book an appointment.');
+    return;
+  }
   const timeEl = document.querySelector('#sec-book .time-slot.selected');
   const purposeEl = document.querySelector('#sec-book .purpose-opt.selected');
 
@@ -398,7 +584,6 @@ function openConfirmModal() {
 
   const date = new Date(selectedDateStr);
   const label = date.toLocaleDateString('en-US', { weekday:'short', month:'short', day:'numeric' });
-  const credits = loggedInStudent.credits ?? 3;
 
   document.getElementById('confirm-date').textContent = label;
   document.getElementById('confirm-time').textContent = timeEl.textContent.trim();
@@ -476,7 +661,8 @@ function submitPostAppt() {
   }
 
   closeModal('post-appt-modal');
-  loadStudentInfo(); // refresh everything
+  loadStudentInfo();
+  loadPostAppointmentNotification();
 }
 
 function openSlipModal(apptId) {
@@ -646,3 +832,109 @@ function loadHistory() {
       </tr>`;
   }).join('');
 }
+
+function downloadSlipAsPNG() {
+  const modal = document.querySelector('#slip-modal .modal');
+  const actions = modal.querySelector('.modal-actions');
+
+  // Temporarily hide buttons
+  actions.style.display = 'none';
+
+  html2canvas(modal, {
+    scale: 2,
+    backgroundColor: '#ffffff',
+    useCORS: true
+  }).then(canvas => {
+    // Get appointment date for filename
+    const dateText = document.getElementById('slip-date').textContent.trim();
+    const dateObj = new Date(dateText);
+    const formatted = dateObj.toLocaleDateString('en-US', {
+      month: '2-digit', day: '2-digit', year: 'numeric'
+    }).replace(/\//g, '-');
+
+    const link = document.createElement('a');
+    link.download = `confirmation-slip-${formatted}.png`;
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+
+    // Restore buttons
+    actions.style.display = 'flex';
+  });
+}
+
+function loadPostAppointmentNotification() {
+  const student = getStudent();
+  const appointments = JSON.parse(localStorage.getItem(`appointments_${student.sid}`) || '[]');
+  const now = new Date();
+  const notif = document.getElementById('notif-post');
+
+  // Auto-yes: if 24 hours have passed since appointment and still no response
+  appointments.forEach(a => {
+    if (a.response) return;
+
+    const apptDateTime = new Date(`${a.date}T${to24Hour(a.time)}`);
+    const oneDayAfter = new Date(apptDateTime.getTime() + 24 * 60 * 60 * 1000);
+
+    if (now >= oneDayAfter) {
+      a.response = 'auto-yes';
+      a.comment = 'No comment provided';
+    }
+  });
+
+  // Save auto-yes updates
+  localStorage.setItem(`appointments_${student.sid}`, JSON.stringify(appointments));
+
+  // Find appointments where 1 hour has passed since appointment time, no response yet
+  const pending = appointments
+    .filter(a => {
+      if (a.response) return false;
+
+      const apptDateTime = new Date(`${a.date}T${to24Hour(a.time)}`);
+      const oneHourAfter = new Date(apptDateTime.getTime() + 60 * 60 * 1000);
+
+      return now >= oneHourAfter;
+    })
+    .sort((a, b) => new Date(b.date) - new Date(a.date));
+
+  if (pending.length === 0) {
+    notif.style.display = 'none';
+    return;
+  }
+
+  const appt = pending[0];
+  const dateLabel = new Date(appt.date).toLocaleDateString('en-US', {
+    month: 'long', day: 'numeric', year: 'numeric'
+  });
+
+  document.getElementById('notif-post-text').innerHTML =
+    `Did you attend your appointment on <strong>${dateLabel} at ${appt.time}</strong>? Please confirm.`;
+
+  document.getElementById('post-appt-modal-sub').innerHTML =
+    `Did you attend your appointment on <strong>${dateLabel} at ${appt.time}</strong>?`;
+
+  notif.style.display = 'flex';
+}
+
+function reschedChangeDate() {
+  reschedSelectedDate = null;
+  document.getElementById('resched-cal-section').style.display = 'block';
+  document.getElementById('resched-date-label').style.display = 'none';
+  document.getElementById('resched-time-section').style.display = 'none';
+  renderReschedCalendar();
+}
+
+// Sync credits if admin updates them
+window.addEventListener('storage', function(e) {
+  if (e.key === 'loggedInStudent' || e.key === 'students') {
+    // Re-sync credits from students array
+    const students = JSON.parse(localStorage.getItem('students') || '[]');
+    const loggedIn = JSON.parse(localStorage.getItem('loggedInStudent') || 'null');
+    if (!loggedIn) return;
+    const match = students.find(s => s.sid === loggedIn.sid);
+    if (match) {
+      loggedIn.credits = match.credits;
+      localStorage.setItem('loggedInStudent', JSON.stringify(loggedIn));
+    }
+    loadStudentInfo();
+  }
+});

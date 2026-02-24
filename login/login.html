@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DDAS — Digital Dental Appointment System</title>
+    <link rel="icon" type="image/png" href="../img/image.png">
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../root.css">
     <link rel="stylesheet" href="auth.css">
   </head>
   <body>
@@ -16,10 +18,11 @@
         <div class="hero-shape s3"></div>
 
         <div class="tooth-icon">
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12 2C9.5 2 7 3.5 6 6c-1.5 3.5-.5 6 .5 9 .7 2.2 1.2 4 1.5 5.5.2 1 1 1.5 1.8 1.5s1.3-.8 1.5-1.5c.4-1.5.7-3.2.7-3.2s.3 1.7.7 3.2c.2.7.7 1.5 1.5 1.5s1.6-.5 1.8-1.5c.3-1.5.8-3.3 1.5-5.5 1-3 2-5.5.5-9-1-2.5-3.5-4-6-4z"/>
-          </svg>
-          <span>CITE Dental</span>
+          <img src="../img/image.png" alt="School Logo" style="width:60px;height:60px;object-fit:contain;filter:drop-shadow(0 2px 8px rgba(0,0,0,.3))">
+          <div>
+            <div style="font-family:'Playfair Display',serif;font-weight:700;font-size:1rem;line-height:1">CITE Technical Institute, Inc.</div>
+            <div style="font-size:.72rem;opacity:.7;letter-spacing:.04em">Digital Dental Appointment System</div>
+          </div>
         </div>
 
         <div class="hero-content">
@@ -27,15 +30,34 @@
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
             Tue · Wed · Thu — 4:00 PM to 5:00 PM
           </div>
-          <h1>CITE Technical Institute's dental care, simplified.</h1>
-          <p>Book your appointment in seconds. 3 slots per semester — easy scheduling, timely reminders, and a healthier smile.</p>  
+          <h1>Dental care, simplified.</h1>
+          <p>Book your appointment in seconds. 3 slots per semester — easy scheduling, timely reminders, and a healthier smile.</p>
+
+          <!-- ADD THIS -->
+          <div class="hero-features">
+            <div class="hero-feature">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+              3 free appointments per semester
+            </div>
+            <div class="hero-feature">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+              Instant confirmation slip
+            </div>
+            <div class="hero-feature">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+              Easy reschedule & cancellation
+            </div>
+            <div class="hero-feature">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+              Track your appointment history
+            </div>
+          </div>
         </div>
       </div>
 
       <!-- RIGHT FORM -->
       <div class="form-panel">
         <div class="form-wrapper">
-
           <!-- TABS -->
           <div class="tabs">
             <button class="tab-btn active" data-tab="login" onclick="switchTab('login')">Sign In</button>
@@ -87,7 +109,7 @@
               <div id="admin-login-fields" class="hidden">
                 <div class="field" style="margin-bottom:18px">
                   <label for="login-email">Email Address</label>
-                  <input type="email" id="login-email" placeholder="admin@smilecare.com">
+                  <input type="email" id="login-email" placeholder="admin@testaccount.com">
                 </div>
                 <div class="field">
                   <label for="login-admin-pw">Password</label>

@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DDAS — Student Dashboard</title>
+    <link rel="icon" type="image/png" href="../img/image.png">
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../root.css">
     <link rel="stylesheet" href="student.css">
   </head>
   <body>
@@ -96,9 +98,9 @@
           <span class="notif-text" id="notif-reminder-text"></span>
         </div>
 
-        <div class="notification post">
+        <div class="notification post" id="notif-post" style="display:none">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-          <span class="notif-text">Did you attend your appointment on <strong>Feb 18</strong>? Please confirm.</span>
+          <span class="notif-text" id="notif-post-text"></span>
           <button class="notif-action" onclick="openModal('post-appt-modal')">Respond</button>
         </div>
 
@@ -113,55 +115,6 @@
               <span class="card-badge" id="appt-badge">2 booked</span>
             </div>
             <div class="appointment-list" id="appointment-list">
-              <!-- Appointment 1: today, locked -->
-              <div class="appt-card">
-                <div class="appt-date-box">
-                  <span class="day">23</span>
-                  <span class="month">Feb</span>
-                </div>
-                <div class="appt-details">
-                  <div class="appt-purpose">Cleaning</div>
-                  <div class="appt-meta">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                    4:30 PM · Today
-                  </div>
-                </div>
-                <span class="appt-status locked">🔒 Locked</span>
-                <div class="appt-actions">
-                  <button class="appt-action-btn disabled" title="Cannot reschedule (within 48hrs)">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
-                  </button>
-                  <button class="appt-action-btn danger disabled" title="Cannot cancel (within 48hrs)">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-                  </button>
-                  <button class="appt-action-btn" title="View Confirmation Slip" onclick="openModal('slip-modal')">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-                  </button>
-                </div>
-              </div>
-              <!-- Appointment 2: future, editable -->
-              <div class="appt-card">
-                <div class="appt-date-box" style="background:var(--accent)">
-                  <span class="day">27</span>
-                  <span class="month">Feb</span>
-                </div>
-                <div class="appt-details">
-                  <div class="appt-purpose">Tooth Extraction</div>
-                  <div class="appt-meta">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                    5:00 PM · Thursday
-                  </div>
-                </div>
-                <span class="appt-status confirmed">Confirmed</span>
-                <div class="appt-actions">
-                  <button class="appt-action-btn" title="Reschedule" onclick="openModal('reschedule-modal')">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
-                  </button>
-                  <button class="appt-action-btn danger" title="Cancel" onclick="openModal('cancel-modal')">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-                  </button>
-                </div>
-              </div>
               <div id="no-appt-state" style="display:none;text-align:center;padding:32px 20px">
                 <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" style="color:var(--text-muted);opacity:.4;margin-bottom:12px"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="14" x2="16" y2="14"/></svg>
                 <p style="font-size:.88rem;color:var(--text-muted);margin-bottom:16px">No upcoming appointments</p>
@@ -242,6 +195,11 @@
               <div class="credits-value">2 of 3 remaining</div>
             </div>
           </div>
+        </div>
+
+        <div id="no-credits-warning">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <span>You have <strong>0 credits</strong> remaining. You cannot book any more appointments this semester.</span>
         </div>
 
         <div class="grid">
@@ -368,7 +326,7 @@
     <div class="modal-overlay" id="slip-modal">
       <div class="modal">
         <div class="modal-icon success">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          <img src="../img/image.png" alt="School Logo" style="width:60px;height:60px;object-fit:contain;">
         </div>
         <h3>Confirmation Slip</h3>
         <p class="modal-sub">Present this to the dentist upon arrival</p>
@@ -386,7 +344,7 @@
         </div>
         <div class="modal-actions">
           <button class="modal-btn secondary" onclick="closeModal('slip-modal')">Close</button>
-          <button class="modal-btn primary" onclick="closeModal('slip-modal')">📸 Screenshot</button>
+          <button class="modal-btn primary" onclick="downloadSlipAsPNG()">Download PNG</button>
         </div>
       </div>
     </div>
@@ -431,7 +389,7 @@
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
         </div>
         <h3>Post-Appointment</h3>
-        <p class="modal-sub">Did you attend your appointment on <strong>Feb 18, 2026 at 4:00 PM</strong>?</p>
+        <p class="modal-sub" id="post-appt-modal-sub">Did you attend your appointment on <strong>—</strong>?</p>
         <div class="radio-group">
           <div class="radio-opt" onclick="selectRadio(this,'yes')">✅ Yes</div>
           <div class="radio-opt" onclick="selectRadio(this,'no')">❌ No</div>
@@ -447,20 +405,53 @@
 
     <!-- Reschedule Modal -->
     <div class="modal-overlay" id="reschedule-modal">
-      <div class="modal">
+      <div class="modal" style="max-width:520px">
         <div class="modal-icon" style="background:var(--accent-light);color:var(--accent)">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
         </div>
         <h3>Reschedule Appointment</h3>
-        <p class="modal-sub">Current: <strong>Feb 27, 2026 · 5:00 PM</strong></p>
+        <p class="modal-sub">Current: <strong id="reschedule-current-label">—</strong></p>
 
-        <div style="margin-bottom:16px">
-          <label class="reschedule-label">Select New Date</label>
-          <input type="date" id="reschedule-date" class="reschedule-input" min="2026-02-25">
+        <!-- Mini Calendar -->
+        <div id="resched-cal-section">
+          <div class="calendar-nav" style="margin-bottom:12px">
+            <button class="cal-arrow" onclick="reschedPrevMonth()">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+            </button>
+            <span class="month" id="resched-month-label" style="font-family:'Playfair Display',serif;font-weight:700;font-size:1rem"></span>
+            <button class="cal-arrow" onclick="reschedNextMonth()">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>
+            </button>
+          </div>
+        <div class="cal-grid" style="margin-bottom:8px">
+            <div class="cal-day-label">Sun</div>
+            <div class="cal-day-label">Mon</div>
+            <div class="cal-day-label">Tue</div>
+            <div class="cal-day-label">Wed</div>
+            <div class="cal-day-label">Thu</div>
+            <div class="cal-day-label">Fri</div>
+            <div class="cal-day-label">Sat</div>
+            <div id="resched-cal-body" style="display:contents"></div>
+          </div>
+          <div class="cal-legend" style="margin-bottom:16px">
+            <div class="cal-legend-item"><div class="cal-legend-dot avail"></div>Available</div>
+            <div class="cal-legend-item"><div class="cal-legend-dot full-dot"></div>Full</div>
+          </div>
         </div>
 
-        <div style="margin-bottom:4px">
-          <label class="reschedule-label">Select New Purpose</label>
+        <!-- Selected date label -->
+        <div id="resched-date-label" class="resched-date-chip" style="display:none;margin-bottom:16px" onclick="reschedChangeDate()"></div>
+
+        <!-- Time -->
+        <div id="resched-time-section" style="display:none">
+          <div class="booking-section-title">Select New Time</div>
+          <div class="time-slots" id="resched-slots">
+            <div class="time-slot" onclick="selectReschedSlot(this)">4:00 PM</div>
+            <div class="time-slot" onclick="selectReschedSlot(this)">4:30 PM</div>
+            <div class="time-slot" onclick="selectReschedSlot(this)">5:00 PM</div>
+          </div>
+
+          <div class="booking-section-title">Select New Purpose</div>
           <div class="purpose-options" id="reschedule-purposes">
             <div class="purpose-opt" onclick="selectReschedulePurpose(this)">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2C9.5 2 7 3.5 6 6c-1.5 3.5-.5 6 .5 9 .7 2.2 1.2 4 1.5 5.5.2 1 1 1.5 1.8 1.5s1.3-.8 1.5-1.5c.4-1.5.7-3.2.7-3.2s.3 1.7.7 3.2c.2.7.7 1.5 1.5 1.5s1.6-.5 1.8-1.5c.3-1.5.8-3.3 1.5-5.5 1-3 2-5.5.5-9-1-2.5-3.5-4-6-4z"/></svg>
@@ -474,15 +465,6 @@
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
               Tooth Extraction
             </div>
-          </div>
-        </div>
-
-        <div style="margin-bottom:4px">
-          <label class="reschedule-label">Select New Time</label>
-          <div class="time-slots" id="reschedule-slots">
-            <div class="time-slot" onclick="selectRescheduleSlot(this)">4:00 PM</div>
-            <div class="time-slot" onclick="selectRescheduleSlot(this)">4:30 PM</div>
-            <div class="time-slot" onclick="selectRescheduleSlot(this)">5:00 PM</div>
           </div>
         </div>
 
@@ -507,6 +489,7 @@
         </div>
       </div>
     </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="student.js"></script>
   </body>
 </html>

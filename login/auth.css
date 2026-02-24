@@ -1,33 +1,4 @@
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-
-:root{
-  --bg:#eef3f9;
-  --card:#ffffff;
-  --primary:#1a4f8a;
-  --primary-light:#dceaf9;
-  --primary-dark:#0f3260;
-  --accent:#e8b94a;
-  --accent-light:#fdf5dc;
-  --text:#1a2332;
-  --text-muted:#5a6a82;
-  --border:#d0daea;
-  --error:#c0392b;
-  --error-bg:#fdecea;
-  --radius:14px;
-  --shadow:0 4px 24px rgba(26,79,138,.08);
-  --shadow-lg:0 12px 48px rgba(26,79,138,.15);
-}
-
-html{font-size:16px;scroll-behavior:smooth}
-body{
-  font-family:'DM Sans',sans-serif;
-  background:var(--bg);
-  color:var(--text);
-  min-height:100dvh;
-  display:flex;
-  flex-direction:column;
-  overflow-x:hidden;
-}
+body{display:flex;flex-direction:column;overflow-x:hidden}
 
 /* ─── layout ─── */
 .page{
@@ -147,36 +118,7 @@ body{
 .form-body{display:flex;flex-direction:column;gap:18px}
 .row{display:flex;gap:12px}
 .row .field{flex:1}
-.field{display:flex;flex-direction:column;gap:6px}
-.field label{
-  font-size:.78rem;font-weight:600;letter-spacing:.04em;
-  text-transform:uppercase;color:var(--text-muted);
-}
-.field input{
-  width:100%;padding:13px 16px;border:1.5px solid var(--border);
-  border-radius:10px;font-family:'DM Sans',sans-serif;font-size:.95rem;
-  color:var(--text);background:var(--bg);transition:all .2s ease;
-  outline:none;
-}
-.field input::placeholder{color:#b5b0a7}
-.field input:focus{
-  border-color:var(--primary);background:#fff;
-  box-shadow:0 0 0 3px rgba(26,79,138,.1);
-}
-.field input.input-error{
-  border-color:var(--error);background:var(--error-bg);
-}
-.field .error-msg{
-  font-size:.75rem;color:var(--error);font-weight:500;
-  display:none;padding-left:2px;
-}
-.field .error-msg.show{display:block;animation:shake .3s ease}
 
-@keyframes shake{
-  0%,100%{transform:translateX(0)}
-  25%{transform:translateX(-4px)}
-  75%{transform:translateX(4px)}
-}
 
 /* password toggle */
 .pw-wrap{position:relative}
@@ -299,7 +241,7 @@ body{
 @media(max-width:480px){
   .hero{padding:28px 20px 36px}
   .tooth-icon{top:20px;left:20px}
-  .hero-content{margin-top:52px}
+  .hero-content{margin-top:90px}
   .hero h1{font-size:1.5rem}
   .hero-badge{font-size:.72rem;padding:6px 12px}
 
@@ -313,4 +255,24 @@ body{
   .role-btn{padding:10px;font-size:.82rem}
 }
 
-.hidden{display:none!important}
+.hero-features {
+  margin-top: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.hero-feature {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: .88rem;
+  opacity: .85;
+}
+.hero-feature svg {
+  flex-shrink: 0;
+  background: rgba(255,255,255,.15);
+  border-radius: 50%;
+  padding: 3px;
+  width: 22px;
+  height: 22px;
+}

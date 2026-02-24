@@ -71,9 +71,31 @@ function handleLogin(e) {
     setTimeout(() => {
       window.location.href = '../student/student.html';
     }, 1500);
+
   } else {
+    // ─── Static Admin Account ───
+    const ADMIN_EMAIL = 'admin@testaccount.com';
+    const ADMIN_PW    = 'password';
+
     const email = document.getElementById('login-email').value.trim();
-    showSuccess('Admin Access', `Signed in as Admin${email ? ' (' + email + ')' : ''}. Redirecting…`);
+    const pw    = document.getElementById('login-admin-pw').value;
+
+    if (!email || !pw) {
+      document.getElementById('login-email').classList.add('input-error');
+      document.getElementById('login-admin-pw').classList.add('input-error');
+      showSuccess('Login Failed', 'Please enter your email and password.');
+      return;
+    }
+
+    if (email !== ADMIN_EMAIL || pw !== ADMIN_PW) {
+      document.getElementById('login-email').classList.add('input-error');
+      document.getElementById('login-admin-pw').classList.add('input-error');
+      showSuccess('Login Failed', 'Invalid admin credentials. Please try again.');
+      return;
+    }
+
+    localStorage.setItem('loggedInAdmin', JSON.stringify({ email: ADMIN_EMAIL, name: 'Admin Leader' }));
+    showSuccess('Welcome, Admin!', 'Redirecting to admin dashboard…');
     setTimeout(() => {
       window.location.href = '../admin/admin.html';
     }, 1500);
