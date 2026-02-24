@@ -182,15 +182,131 @@ table tbody tr:hover td{background:rgba(0,0,0,.015)}
 @media(max-width:1100px){
   .stats-row{grid-template-columns:repeat(2,1fr)}
 }
+/* ─── RESPONSIVE ─── */
 @media(max-width:640px){
   .stats-row{grid-template-columns:1fr}
   .main{padding:72px 14px 24px}
-  .topbar{flex-direction:column;align-items:flex-start}
-  .tab-btn{padding:14px 14px;font-size:.8rem}
-  .tab-content{padding:18px 14px}
-  table{min-width:500px}
-  .toolbar{flex-direction:column}
-  .search-box{min-width:100%}
+  .topbar{flex-direction:column;align-items:flex-start;gap:12px}
+
+  /* Tab bar: horizontal scroll */
+  .tab-bar{
+    overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:none;
+    padding:0 4px;
+    gap:0;
+  }
+  .tab-bar::-webkit-scrollbar{display:none}
+  .tab-btn{
+    padding:12px 14px;
+    font-size:.76rem;
+    white-space:nowrap;
+    flex-shrink:0;
+  }
+  .tab-btn svg{display:none}
+  .tab-content{padding:16px 14px}
+
+  /* Toolbar: stack vertically */
+  .toolbar{
+    flex-direction:column;
+    gap:8px;
+  }
+  .toolbar .search-box{
+    min-width:100%;
+    width:100%;
+  }
+  .toolbar .filter-btn{
+    width:100%;
+    justify-content:center;
+  }
+  .toolbar > div[style*="position:relative"]{
+    width:100%;
+  }
+  .toolbar > div[style*="position:relative"] .filter-btn{
+    width:100%;
+    justify-content:center;
+  }
+
+  /* Calendar picker & purpose dropdown: full width */
+  #appt-cal-picker{
+    width:calc(100vw - 60px) !important;
+    right:auto !important;
+    left:0 !important;
+  }
+  #purpose-dropdown{
+    width:100% !important;
+    right:auto !important;
+    left:0 !important;
+  }
+
+  /* Tables: card layout */
+  table{min-width:0 !important}
+  .table-wrap{margin:0;padding:0;overflow-x:visible}
+  table thead{display:none}
+  table, table tbody, table tr, table td{display:block;width:100%}
+  table tr{
+    padding:14px 16px;
+    margin-bottom:10px;
+    background:var(--bg);
+    border-radius:12px;
+    border:1px solid var(--border);
+  }
+  table tbody tr:hover td{background:transparent}
+  table td{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:6px 0;
+    border-bottom:1px solid var(--border);
+    font-size:.84rem;
+  }
+  table td:last-child{border-bottom:none}
+  table td::before{
+    content:attr(data-label);
+    font-size:.72rem;
+    font-weight:600;
+    text-transform:uppercase;
+    letter-spacing:.06em;
+    color:var(--text-muted);
+    flex-shrink:0;
+    margin-right:12px;
+  }
+  table td:first-child{display:none}
+
+  .student-cell{gap:8px}
+  .student-avatar{width:30px;height:30px;font-size:.68rem}
+
+  /* Today badge */
+  .today-badge{
+    width:100%;
+    justify-content:center;
+    font-size:.82rem;
+    padding:10px 16px;
+  }
+}
+
+/* ─── MOBILE TAB BAR FIX ─── */
+@media (max-width: 640px) {
+  .tab-bar {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+    padding: 0;
+  }
+  .tab-btn {
+    padding: 12px 6px;
+    font-size: 0;
+    justify-content: center;
+    gap: 4px;
+    border-bottom: 2px solid transparent;
+  }
+  .tab-btn svg { display: block; }
+  .tab-btn .tab-count {
+    font-size: .68rem;
+  }
+  .tab-btn::after {
+    bottom: -2px;
+  }
 }
 
 .purpose-option{
@@ -235,3 +351,76 @@ table tbody tr:hover td{background:rgba(0,0,0,.015)}
 .user-info{flex:1;min-width:0}
 .user-info .name{font-size:.88rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .user-info .role{font-size:.72rem;color:rgba(255,255,255,.45)}
+
+/* ─── RESPONSIVE ADMIN TABLES ─── */
+@media (max-width: 640px) {
+  table { min-width: 0 !important; }
+  .table-wrap { margin: 0; padding: 0; }
+
+  table thead { display: none; }
+  table, table tbody, table tr, table td { display: block; width: 100%; }
+
+  table tr {
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    background: var(--bg);
+    border-radius: 12px;
+    border: 1px solid var(--border);
+  }
+  table tbody tr:hover td { background: transparent; }
+  table td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: .84rem;
+  }
+  table td:last-child { border-bottom: none; }
+  table td::before {
+    content: attr(data-label);
+    font-size: .72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    color: var(--text-muted);
+    flex-shrink: 0;
+    margin-right: 12px;
+  }
+  table td:first-child { display: none; }
+
+  .student-cell { gap: 8px; }
+}
+
+@media (max-width: 640px) {
+  #student-appts-modal .modal {
+    max-width: 100% !important;
+    margin: 0 12px;
+  }
+  #student-appts-body table thead { display: none; }
+  #student-appts-body table,
+  #student-appts-body table tbody,
+  #student-appts-body table tr,
+  #student-appts-body table td {
+    display: block;
+    width: 100%;
+  }
+  #student-appts-body table tr {
+    padding: 12px 14px;
+    margin-bottom: 8px;
+    background: var(--bg);
+    border-radius: 10px;
+    border: 1px solid var(--border);
+  }
+  #student-appts-body table td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 0 !important;
+    border-bottom: 1px solid var(--border) !important;
+    font-size: .84rem !important;
+  }
+  #student-appts-body table td:last-child {
+    border-bottom: none !important;
+  }
+}

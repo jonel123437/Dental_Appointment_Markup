@@ -127,7 +127,7 @@ function filterAppointments() {
   if (filtered.length === 0) {
     tbody.innerHTML = `
       <tr>
-        <td colspan="6" style="text-align:center;padding:32px;color:var(--text-muted);font-style:italic">
+        <td colspan="5" style="text-align:center;padding:32px;color:var(--text-muted);font-style:italic">
           No appointments found.
         </td>
       </tr>`;
@@ -139,18 +139,12 @@ function filterAppointments() {
     const initials = (student.fname[0] + student.lname[0]).toUpperCase();
     const fullName = `${student.fname} ${student.lname}`;
     const credits = student.credits ?? 3;
-
-    let dots = '';
-    for (let j = 0; j < 3; j++) {
-      dots += `<span class="dot ${j < credits ? 'filled' : 'empty'}"></span>`;
-    }
-
     const dateLabel = new Date(appt.date + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 
     tbody.innerHTML += `
       <tr>
-        <td style="font-weight:700;color:var(--text-muted)">${i + 1}</td>
-        <td>
+        <td data-label="No." style="font-weight:700;color:var(--text-muted)">${i + 1}</td>
+        <td data-label="Student">
           <div class="student-cell">
             <div class="student-avatar">${initials}</div>
             <div>
@@ -159,15 +153,9 @@ function filterAppointments() {
             </div>
           </div>
         </td>
-        <td><strong>${dateLabel}</strong></td>
-        <td><span class="time-badge">${appt.time}</span></td>
-        <td>${appt.purpose}</td>
-        <td>
-          <div class="credits-display">
-            ${dots}
-            ${credits}/3
-          </div>
-        </td>
+        <td data-label="Date"><strong>${dateLabel}</strong></td>
+        <td data-label="Time"><span class="time-badge">${appt.time}</span></td>
+        <td data-label="Purpose">${appt.purpose}</td>
       </tr>`;
   });
 
@@ -324,7 +312,7 @@ function loadStudents() {
   if (students.length === 0) {
     tbody.innerHTML = `
       <tr>
-        <td colspan="5" style="text-align:center;padding:32px;color:var(--text-muted);font-style:italic">
+        <td colspan="6" style="text-align:center;padding:32px;color:var(--text-muted);font-style:italic">
           No students found.
         </td>
       </tr>`;
@@ -336,6 +324,9 @@ function loadStudents() {
     const initials = (student.fname[0] + student.lname[0]).toUpperCase();
     const fullName = `${student.fname} ${student.lname}`;
 
+    const appointments = JSON.parse(localStorage.getItem(`appointments_${student.sid}`) || '[]');
+    const totalAppts = appointments.length;
+
     let dots = '';
     for (let j = 0; j < 3; j++) {
       dots += `<span class="dot ${j < credits ? 'filled' : 'empty'}"></span>`;
@@ -343,8 +334,8 @@ function loadStudents() {
 
     tbody.innerHTML += `
       <tr>
-        <td style="font-weight:700;color:var(--text-muted)">${i + 1}</td>
-        <td>
+        <td data-label="No." style="font-weight:700;color:var(--text-muted)">${i + 1}</td>
+        <td data-label="Student">
           <div class="student-cell">
             <div class="student-avatar">${initials}</div>
             <div>
@@ -353,14 +344,17 @@ function loadStudents() {
             </div>
           </div>
         </td>
-        <td style="color:var(--text-muted)">${student.email ?? '—'}</td>
-        <td>
+        <td data-label="Email" style="color:var(--text-muted)">${student.email ?? '—'}</td>
+        <td data-label="Credits">
           <div class="credits-display">
             ${dots}
             ${credits}/3
           </div>
         </td>
-        <td><button class="action-btn edit" onclick="openEditModal('${fullName}','${student.sid}',${credits})">✏️ Edit</button></td>
+        <td data-label="Appointments" style="text-align:center">
+          <button class="action-btn" onclick="openStudentApptsModal('${student.sid}', '${fullName}')" style="font-weight:700">${totalAppts}</button>
+        </td>
+        <td data-label="Actions"><button class="action-btn edit" onclick="openEditModal('${fullName}','${student.sid}',${credits})">✏️ Edit</button></td>
       </tr>`;
   });
 }
@@ -440,7 +434,6 @@ function loadFeedback() {
     const fullName = `${student.fname} ${student.lname}`;
     const apptDate = new Date(appt.date + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 
-    // Response date: approximate as day after appointment
     const respDate = new Date(appt.date + 'T00:00:00');
     respDate.setDate(respDate.getDate() + 1);
     const responseDateLabel = respDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
@@ -452,8 +445,8 @@ function loadFeedback() {
 
     tbody.innerHTML += `
       <tr>
-        <td style="font-weight:700;color:var(--text-muted)">${i + 1}</td>
-        <td>
+        <td data-label="No." style="font-weight:700;color:var(--text-muted)">${i + 1}</td>
+        <td data-label="Student">
           <div class="student-cell">
             <div class="student-avatar">${initials}</div>
             <div>
@@ -462,11 +455,11 @@ function loadFeedback() {
             </div>
           </div>
         </td>
-        <td><strong>${apptDate}</strong></td>
-        <td><span class="time-badge">${appt.time}</span></td>
-        <td><span class="badge ${badgeClass}">${badgeLabel}</span></td>
-        <td>${responseDateLabel}</td>
-        <td><button class="action-btn" onclick="openFeedbackModal(${i})">👁️ View</button></td>
+        <td data-label="Date"><strong>${apptDate}</strong></td>
+        <td data-label="Time"><span class="time-badge">${appt.time}</span></td>
+        <td data-label="Response"><span class="badge ${badgeClass}">${badgeLabel}</span></td>
+        <td data-label="Resp. Date">${responseDateLabel}</td>
+        <td data-label="Actions"><button class="action-btn" onclick="openFeedbackModal(${i})">👁️ View</button></td>
       </tr>`;
   });
 
@@ -507,4 +500,46 @@ loadFeedback();
 function logout() {
   localStorage.removeItem('loggedInAdmin');
   window.location.href = '../login/login.html';
+}
+
+function openStudentApptsModal(sid, fullName) {
+  const appointments = JSON.parse(localStorage.getItem(`appointments_${sid}`) || '[]');
+
+  document.getElementById('student-appts-title').textContent = `${fullName}'s Appointments`;
+  document.getElementById('student-appts-sub').textContent = `${appointments.length} total appointment${appointments.length !== 1 ? 's' : ''}`;
+
+  const body = document.getElementById('student-appts-body');
+
+  if (appointments.length === 0) {
+    body.innerHTML = `<p style="text-align:center;padding:24px;color:var(--text-muted);font-style:italic">No appointments yet.</p>`;
+    openModal('student-appts-modal');
+    return;
+  }
+
+  const sorted = [...appointments].sort((a, b) => new Date(b.date) - new Date(a.date));
+
+  body.innerHTML = `
+    <table style="width:100%;border-collapse:collapse">
+      <thead>
+        <tr>
+          <th style="font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);text-align:left;padding:8px 10px;border-bottom:2px solid var(--border)">Date</th>
+          <th style="font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);text-align:left;padding:8px 10px;border-bottom:2px solid var(--border)">Time</th>
+          <th style="font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);text-align:left;padding:8px 10px;border-bottom:2px solid var(--border)">Purpose</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${sorted.map(appt => {
+          const date = new Date(appt.date + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+          return `
+            <tr>
+              <td data-label="Date" style="padding:10px;border-bottom:1px solid var(--border);font-size:.85rem;font-weight:600">${date}</td>
+              <td data-label="Time" style="padding:10px;border-bottom:1px solid var(--border);font-size:.85rem"><span class="time-badge">${appt.time}</span></td>
+              <td data-label="Purpose" style="padding:10px;border-bottom:1px solid var(--border);font-size:.85rem">${appt.purpose}</td>
+            </tr>`;
+        }).join('')}
+      </tbody>
+    </table>
+  `;
+
+  openModal('student-appts-modal');
 }

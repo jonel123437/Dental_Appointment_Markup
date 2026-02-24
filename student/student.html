@@ -325,15 +325,17 @@
     <!-- Confirmation Slip Modal -->
     <div class="modal-overlay" id="slip-modal">
       <div class="modal">
-        <div class="modal-icon success">
-          <img src="../img/image.png" alt="School Logo" style="width:60px;height:60px;object-fit:contain;">
-        </div>
         <h3>Confirmation Slip</h3>
         <p class="modal-sub">Present this to the dentist upon arrival</p>
         <div class="slip">
           <div class="slip-header">
-            <h4>🦷 Digital Dental Appointment System</h4>
-            <p>CITE Technical Institute, Inc.</p>
+            <div style="display:flex;align-items:center;gap:10px;justify-content:center;margin-bottom:4px">
+              <img src="../img/image.png" alt="School Logo" style="width:44px;height:44px;object-fit:contain;filter:drop-shadow(0 2px 6px rgba(0,0,0,.2))">
+              <div style="text-align:left">
+                <div style="font-family:'Playfair Display',serif;font-weight:700;font-size:.95rem;line-height:1.2">CITE Technical Institute, Inc.</div>
+                <div style="font-size:.7rem;opacity:.6;letter-spacing:.04em">Digital Dental Appointment System</div>
+              </div>
+            </div>
           </div>
           <div class="slip-row"><span class="slip-label">Student</span><span class="slip-value" id="slip-name">Juan Dela Cruz</span></div>
           <div class="slip-row"><span class="slip-label">Student ID</span><span class="slip-value" id="slip-sid">2021-00123</span></div>

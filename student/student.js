@@ -117,7 +117,9 @@ function renderCalendar() {
     const isToday = date.getTime() === today.getTime();
     const isPast = date < today;
     const isBookable = BOOKABLE_DAYS.includes(dow);
-    const noCredits = (loggedInStudent.credits ?? 3) <= 0; // ← ADD
+    const noCredits = (getStudent().credits ?? 3) <= 0;
+    const now = new Date();
+    const isTodayAfter4PM = isToday && now.getHours() >= 16;
 
     const bookingsOnDay = JSON.parse(localStorage.getItem(`day_${dateStr}`) || '[]');
     const isFull = bookingsOnDay.length >= 3;
@@ -126,9 +128,21 @@ function renderCalendar() {
     const d = document.createElement('div');
     d.textContent = day;
 
-    if (isToday) {
+    // AFTER
+    if (isToday && (isTodayAfter4PM || !isBookable || alreadyBooked || isFull || noCredits)) {
       d.className = 'cal-day today';
-    } else if (isPast || !isBookable || noCredits) { // ← ADD noCredits
+    } else if (isToday && !isTodayAfter4PM && isBookable && !alreadyBooked && !isFull && !noCredits) {
+      d.className = 'cal-day today available';
+      d.onclick = () => selectDate(d, dateStr);
+      const dotsEl = document.createElement('div');
+      dotsEl.className = 'slot-dots';
+      for (let i = 0; i < 3; i++) {
+        const dot = document.createElement('span');
+        dot.className = 'slot-dot' + (i < bookingsOnDay.length ? ' taken' : '');
+        dotsEl.appendChild(dot);
+      }
+      d.appendChild(dotsEl);
+    } else if (isPast || !isBookable || noCredits) {
       d.className = 'cal-day';
       d.style.opacity = '.35';
     } else if (alreadyBooked) {
@@ -149,7 +163,6 @@ function renderCalendar() {
       }
       d.appendChild(dotsEl);
     }
-
     if (dateStr === selectedDateStr) d.classList.add('selected');
     grid.appendChild(d);
   }
@@ -201,6 +214,20 @@ function selectDate(el, dateStr) {
     slot.classList.toggle('taken', takenTimes.includes(slot.textContent.trim()));
     slot.onclick = slot.classList.contains('taken') ? null : () => selectSlot(slot);
   });
+
+  const todayStr = new Date().toISOString().split('T')[0];
+  if (dateStr === todayStr) {
+    const nowHour = new Date().getHours();
+    const nowMin = new Date().getMinutes();
+    document.querySelectorAll('.time-slot').forEach(slot => {
+      const slotTime = to24Hour(slot.textContent.trim());
+      const [slotH, slotM] = slotTime.split(':').map(Number);
+      if (slotH < nowHour || (slotH === nowHour && slotM <= nowMin)) {
+        slot.classList.add('taken');
+        slot.onclick = null;
+      }
+    });
+  }
 }
 
 // ─── Time Slot Selection ───
@@ -458,13 +485,14 @@ function loadUpcomingAppointments() {
 
   const today = new Date();
   today.setHours(0,0,0,0);
+  const now = new Date();
 
   const upcoming = appointments
-    .filter(a => new Date(a.date) >= today)
+    .filter(a => new Date(a.date) >= today && !a.response)
     .sort((a, b) => new Date(a.date) - new Date(b.date));
 
-  // Clear existing hardcoded cards
-  list.querySelectorAll('.appt-card').forEach(c => c.remove());
+  // Clear existing cards and dividers
+  list.querySelectorAll('.appt-card, .now-divider').forEach(c => c.remove());
 
   if (upcoming.length === 0) {
     noApptState.style.display = 'block';
@@ -475,52 +503,82 @@ function loadUpcomingAppointments() {
   noApptState.style.display = 'none';
   badge.textContent = `${upcoming.length} booked`;
 
-  upcoming.forEach(appt => {
-    const apptDate = new Date(appt.date);
-    const isToday = apptDate.toDateString() === new Date().toDateString();
-    const diffHours = (apptDate - new Date()) / 36e5;
-    const isLocked = diffHours < 48;
+  // Separate today vs future
+  const todayAppts = upcoming.filter(a => new Date(a.date).toDateString() === now.toDateString());
+  const futureAppts = upcoming.filter(a => new Date(a.date).toDateString() !== now.toDateString());
 
-    const day = apptDate.getDate();
-    const month = apptDate.toLocaleDateString('en-US', { month: 'short' });
-    const weekday = apptDate.toLocaleDateString('en-US', { weekday: 'long' });
-
-    const card = document.createElement('div');
-    card.className = 'appt-card';
-    card.innerHTML = `
-      <div class="appt-date-box" style="background:${isLocked ? 'var(--primary)' : 'var(--accent)'}">
-        <span class="day">${day}</span>
-        <span class="month">${month}</span>
-      </div>
-      <div class="appt-details">
-        <div class="appt-purpose">${appt.purpose}</div>
-        <div class="appt-meta">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-          ${appt.time} · ${isToday ? 'Today' : weekday}
-        </div>
-      </div>
-      <span class="appt-status ${isLocked ? 'locked' : 'confirmed'}">
-        ${isLocked ? '🔒 Locked' : 'Confirmed'}
-      </span>
-      <div class="appt-actions">
-        <button class="appt-action-btn ${isLocked ? 'disabled' : ''}"
-          title="${isLocked ? 'Cannot reschedule (within 48hrs)' : 'Reschedule'}"
-          ${isLocked ? 'disabled' : `onclick="openRescheduleModal('${appt.id}')"`}>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
-        </button>
-        <button class="appt-action-btn danger ${isLocked ? 'disabled' : ''}"
-          title="${isLocked ? 'Cannot cancel (within 48hrs)' : 'Cancel'}"
-          ${isLocked ? 'disabled' : `onclick="openCancelModal('${appt.id}')"`}>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-        </button>
-        ${isLocked ? `
-        <button class="appt-action-btn" title="View Confirmation Slip" onclick="openSlipModal('${appt.id}')">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-        </button>` : ''}
-      </div>
-    `;
-    list.insertBefore(card, noApptState);
+  // Render today's appointments
+  todayAppts.forEach(appt => {
+    list.insertBefore(buildApptCard(appt, now), noApptState);
   });
+
+  // Insert divider only if there are BOTH today and future appointments
+  if (todayAppts.length > 0 && futureAppts.length > 0) {
+    const divider = document.createElement('div');
+    divider.className = 'now-divider';
+    divider.innerHTML = 'Upcoming';
+    list.insertBefore(divider, noApptState);
+  }
+
+  // Render future appointments
+  futureAppts.forEach(appt => {
+    list.insertBefore(buildApptCard(appt, now), noApptState);
+  });
+}
+
+function buildApptCard(appt, now) {
+  const apptDate = new Date(appt.date);
+  const isToday = apptDate.toDateString() === now.toDateString();
+
+  // Use actual appointment datetime for 48-hour check
+  const apptDateTime = new Date(`${appt.date}T${to24Hour(appt.time)}`);
+  const diffHours = (apptDateTime - now) / 36e5;
+
+  const isNow = isToday;
+  const isLocked = isNow || (!isToday && diffHours < 48);
+
+  const day = apptDate.getDate();
+  const month = apptDate.toLocaleDateString('en-US', { month: 'short' });
+  const weekday = apptDate.toLocaleDateString('en-US', { weekday: 'long' });
+
+  const card = document.createElement('div');
+  card.className = 'appt-card';
+  if (isNow) card.classList.add('appt-card--today');
+
+  card.innerHTML = `
+    <div class="appt-date-box" style="background:${isLocked ? 'var(--primary)' : 'var(--accent)'}">
+      <span class="day">${day}</span>
+      <span class="month">${month}</span>
+    </div>
+    <div class="appt-details">
+      <div class="appt-purpose">${appt.purpose}</div>
+      <div class="appt-meta">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        ${appt.time} · ${isToday ? 'Today' : weekday}
+      </div>
+    </div>
+    <span class="appt-status ${isNow ? 'now' : isLocked ? 'confirmed' : 'upcoming'}">
+      ${isNow ? 'Now' : isLocked ? 'Confirmed' : 'Upcoming'}
+    </span>
+    <div class="appt-actions">
+      <button class="appt-action-btn ${isLocked ? 'disabled' : ''}"
+        title="${isLocked ? 'Cannot reschedule (within 48hrs)' : 'Reschedule'}"
+        ${isLocked ? 'disabled' : `onclick="openRescheduleModal('${appt.id}')"`}>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+      </button>
+      <button class="appt-action-btn danger ${isLocked ? 'disabled' : ''}"
+        title="${isLocked ? 'Cannot cancel (within 48hrs)' : 'Cancel'}"
+        ${isLocked ? 'disabled' : `onclick="openCancelModal('${appt.id}')"`}>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+      ${isLocked ? `
+        <button class="appt-action-btn" title="View Confirmation Slip" onclick="openSlipModal('${appt.id}')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      </button>` : ''}
+    </div>
+  `;
+
+  return card;
 }
 
 function confirmBooking() {
@@ -651,7 +709,12 @@ function submitPostAppt() {
   // Find the most recent past appointment without a response
   const today = new Date();
   const target = appointments
-    .filter(a => new Date(a.date) < today && !a.response)
+    .filter(a => {
+      if (a.response) return false;
+      const apptDateTime = new Date(`${a.date}T${to24Hour(a.time)}`);
+      const oneHourAfter = new Date(apptDateTime.getTime() + 60 * 60 * 1000);
+      return new Date() >= oneHourAfter;
+    })
     .sort((a, b) => new Date(b.date) - new Date(a.date))[0];
 
   if (target) {
@@ -720,7 +783,7 @@ function executeCancel(apptId) {
   if (idx !== -1) {
     students[idx].credits = Math.min(3, (students[idx].credits ?? 0) + 1);
     localStorage.setItem('students', JSON.stringify(students));
-    const updatedStudent = { ...loggedInStudent, credits: students[idx].credits };
+    const updatedStudent = { ...getStudent(), credits: students[idx].credits };
     localStorage.setItem('loggedInStudent', JSON.stringify(updatedStudent));
   }
 
@@ -791,15 +854,18 @@ function loadHistory() {
   const student = getStudent();
   const appointments = JSON.parse(localStorage.getItem(`appointments_${student.sid}`) || '[]');
   const tbody = document.getElementById('history-tbody');
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
 
-  // Only past appointments
-  const past = appointments
-    .filter(a => new Date(a.date) < today)
-    .sort((a, b) => new Date(b.date) - new Date(a.date)); // newest first
+  // Show past appointments AND any appointment that has a response (including today's)
+  const history = appointments
+    .filter(a => {
+      const apptDate = new Date(a.date);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      return apptDate < today || a.response;
+    })
+    .sort((a, b) => new Date(b.date) - new Date(a.date));
 
-  if (past.length === 0) {
+  if (history.length === 0) {
     tbody.innerHTML = `
       <tr>
         <td colspan="5" style="text-align:center;padding:32px;color:var(--text-muted);font-style:italic">
@@ -809,13 +875,13 @@ function loadHistory() {
     return;
   }
 
-  tbody.innerHTML = past.map(a => {
+  tbody.innerHTML = history.map(a => {
     const date = new Date(a.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 
     let badgeClass = 'pending-resp';
     let badgeLabel = '⏳ Pending';
-    if (a.response === 'yes')      { badgeClass = 'yes';  badgeLabel = '✅ Yes'; }
-    else if (a.response === 'no')  { badgeClass = 'no';   badgeLabel = '❌ No'; }
+    if (a.response === 'yes')           { badgeClass = 'yes';  badgeLabel = '✅ Yes'; }
+    else if (a.response === 'no')       { badgeClass = 'no';   badgeLabel = '❌ No'; }
     else if (a.response === 'auto-yes') { badgeClass = 'auto'; badgeLabel = '✅ Auto-Yes'; }
 
     const comment = a.comment
@@ -824,11 +890,11 @@ function loadHistory() {
 
     return `
       <tr>
-        <td><strong>${date}</strong></td>
-        <td>${a.time}</td>
-        <td>${a.purpose}</td>
-        <td><span class="response-badge ${badgeClass}">${badgeLabel}</span></td>
-        <td>${comment}</td>
+        <td data-label="Date"><strong>${date}</strong></td>
+        <td data-label="Time">${a.time}</td>
+        <td data-label="Purpose">${a.purpose}</td>
+        <td data-label="Response"><span class="response-badge ${badgeClass}">${badgeLabel}</span></td>
+        <td data-label="Comment">${comment}</td>
       </tr>`;
   }).join('');
 }
@@ -926,7 +992,6 @@ function reschedChangeDate() {
 // Sync credits if admin updates them
 window.addEventListener('storage', function(e) {
   if (e.key === 'loggedInStudent' || e.key === 'students') {
-    // Re-sync credits from students array
     const students = JSON.parse(localStorage.getItem('students') || '[]');
     const loggedIn = JSON.parse(localStorage.getItem('loggedInStudent') || 'null');
     if (!loggedIn) return;
@@ -936,5 +1001,6 @@ window.addEventListener('storage', function(e) {
       localStorage.setItem('loggedInStudent', JSON.stringify(loggedIn));
     }
     loadStudentInfo();
+    renderCalendar(); // ← ADD THIS
   }
 });
