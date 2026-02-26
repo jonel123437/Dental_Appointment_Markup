@@ -488,7 +488,12 @@ function loadUpcomingAppointments() {
   const now = new Date();
 
   const upcoming = appointments
-    .filter(a => new Date(a.date) >= today && !a.response)
+    .filter(a => {
+      if (a.response) return false;
+      const apptDateTime = new Date(`${a.date}T${to24Hour(a.time)}`);
+      const oneHourAfter = new Date(apptDateTime.getTime() + 60 * 60 * 1000);
+      return now < oneHourAfter;
+    })
     .sort((a, b) => new Date(a.date) - new Date(b.date));
 
   // Clear existing cards and dividers
@@ -666,9 +671,15 @@ function loadQuickOverview() {
   const attended = appointments.filter(a => a.response === 'yes' || a.response === 'auto-yes').length;
 
   // Next Appointment
+  const now = new Date();
   const upcoming = appointments
-    .filter(a => new Date(a.date) >= today)
-    .sort((a, b) => new Date(a.date) - new Date(b.date));
+      .filter(a => {
+        if (a.response) return false;
+        const apptDateTime = new Date(`${a.date}T${to24Hour(a.time)}`);
+        const oneHourAfter = new Date(apptDateTime.getTime() + 60 * 60 * 1000);
+        return now < oneHourAfter;
+      })
+      .sort((a, b) => new Date(a.date) - new Date(b.date));
 
   const nextAppt = upcoming[0];
   let nextLabel = '—';
@@ -854,21 +865,21 @@ function loadHistory() {
   const student = getStudent();
   const appointments = JSON.parse(localStorage.getItem(`appointments_${student.sid}`) || '[]');
   const tbody = document.getElementById('history-tbody');
+  const now = new Date();
 
-  // Show past appointments AND any appointment that has a response (including today's)
+  // Show appointments where 1 hour has passed OR has a response
   const history = appointments
     .filter(a => {
-      const apptDate = new Date(a.date);
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
-      return apptDate < today || a.response;
+      const apptDateTime = new Date(`${a.date}T${to24Hour(a.time)}`);
+      const oneHourAfter = new Date(apptDateTime.getTime() + 60 * 60 * 1000);
+      return now >= oneHourAfter || a.response;
     })
     .sort((a, b) => new Date(b.date) - new Date(a.date));
 
   if (history.length === 0) {
     tbody.innerHTML = `
       <tr>
-        <td colspan="5" style="text-align:center;padding:32px;color:var(--text-muted);font-style:italic">
+        <td colspan="6" style="text-align:center;padding:32px;color:var(--text-muted);font-style:italic">
           No past appointments yet.
         </td>
       </tr>`;
@@ -879,10 +890,14 @@ function loadHistory() {
     const date = new Date(a.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 
     let badgeClass = 'pending-resp';
-    let badgeLabel = '⏳ Pending';
-    if (a.response === 'yes')           { badgeClass = 'yes';  badgeLabel = '✅ Yes'; }
-    else if (a.response === 'no')       { badgeClass = 'no';   badgeLabel = '❌ No'; }
-    else if (a.response === 'auto-yes') { badgeClass = 'auto'; badgeLabel = '✅ Auto-Yes'; }
+    let badgeLabel = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> Pending';
+    let respondBtn = '';
+    if (a.response === 'yes')           { badgeClass = 'yes';  badgeLabel = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg> Yes'; }
+    else if (a.response === 'no')       { badgeClass = 'no';   badgeLabel = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg> No'; }
+    else if (a.response === 'auto-yes') { badgeClass = 'auto'; badgeLabel = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg> Auto-Yes'; }
+    else {
+      respondBtn = `<button class="respond-btn" onclick="openModal('post-appt-modal')">Respond</button>`;
+    }
 
     const comment = a.comment
       ? `<span style="color:var(--text-muted);font-style:italic">"${a.comment}"</span>`
@@ -895,6 +910,7 @@ function loadHistory() {
         <td data-label="Purpose">${a.purpose}</td>
         <td data-label="Response"><span class="response-badge ${badgeClass}">${badgeLabel}</span></td>
         <td data-label="Comment">${comment}</td>
+        <td data-label="Action">${respondBtn || '<span style="color:var(--text-muted)">—</span>'}</td>
       </tr>`;
   }).join('');
 }
